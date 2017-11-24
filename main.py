@@ -31,11 +31,15 @@ accidents_subset = accidents_sample[selected]
 # Normalizing the subset
 subset_normal = preprocessing.normalize(accidents_subset, norm='l2')
 
+clustering.ClusteringAlgorithms(subset_normal)
+
+'''
 # Call of KMeans function in clustering.py file
 kmeans_predict = clustering.ApplyKMeans(subset_normal, 4, 5)
 
 # assignment gets turned into DataFrame
 kmeans_clusters = pd.DataFrame(kmeans_predict,index=accidents_subset.index,columns=['kmeans_clusters'])
+'''
 
 '''
 #y se añade como columna a X
@@ -50,4 +54,4 @@ sns_plot = sns.pairplot(X_kmeans, vars=variables, hue="cluster", palette='Paired
 sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
 sns_plot.savefig("kmeans.png")
 print("")
-'''
+'''    
