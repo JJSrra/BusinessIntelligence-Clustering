@@ -6,37 +6,33 @@
 
 import time
 
-from sklearn.cluster import KMeans
-from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans, MeanShift, estimate_bandwidth
 from sklearn import metrics
 
 from math import floor
 
-def ApplyKMeans(dataset, n_clusters, n_init):
-    print("---KMeans---")
-    k_means = KMeans(init='k-means++', n_clusters=n_clusters, n_init=n_init)
-    t1 = time.time()
-    cluster_predict = k_means.fit_predict(dataset) 
-    t2 = time.time() - t1
-    print("\tTime: {:.2f}s".format(t2))
-    metric_CH = metrics.calinski_harabaz_score(dataset, cluster_predict)
-    print("\tCalinski-Harabaz Index: {:.3f}".format(metric_CH))
-    return cluster_predict
-
 def ClusteringAlgorithms(dataset):
+    # K-Means
     k_means = KMeans(init='k-means++', n_clusters=4, n_init=5)
+    
+    # MiniBatch K-Means
     mbkm = MiniBatchKMeans(init='k-means++', n_clusters=4, n_init=5)
+    
+    # Estimate bandwidth for Mean Shift Algorithm
+    bandwidth = estimate_bandwidth(dataset, quantile=0.2, n_samples=500)
+    # Mean Shift
+    mean_shift = MeanShift(bandwidth=bandwidth, bin_seeding=True)
     
     clustering_algorithms = [
         ("K-Means", k_means),
-        ("MiniBatchK-Means", mbkm)
+        ("MiniBatch K-Means", mbkm),
+        ("Mean Shift", mean_shift)
     ]
     
     '''
-    ("Mean-shift", mean_shift),
     ("DBSCAN", dbscan),
     ("Birch", birch),
-    ("SpectralClustering", spectral),
+    ("Spectral Clustering", spectral),
     ("Ward", ward)
     '''
     
