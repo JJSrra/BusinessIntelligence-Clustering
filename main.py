@@ -26,7 +26,7 @@ accidents_sample = accidents[accidents['TIPO_ACCIDENTE'].str.contains("Colisión
 selected = ['TOT_VICTIMAS', 'TOT_MUERTOS', 'TOT_HERIDOS_GRAVES', 'TOT_HERIDOS_LEVES', 'TOT_VEHICULOS_IMPLICADOS']
 
 # Subset with 'selected' variables
-accidents_subset = accidents_sample[selected]
+accidents_subset = accidents_sample[selected].sample(500)
 
 # Normalizing the subset
 subset_normal = preprocessing.normalize(accidents_subset, norm='l2')
@@ -54,4 +54,4 @@ sns_plot = sns.pairplot(X_kmeans, vars=variables, hue="cluster", palette='Paired
 sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
 sns_plot.savefig("kmeans.png")
 print("")
-'''    
+'''
