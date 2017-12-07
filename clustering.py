@@ -7,6 +7,7 @@
 import time
 import seaborn as sns
 import pandas as pd
+import os
 
 from sklearn.cluster import KMeans, MiniBatchKMeans, MeanShift, DBSCAN, Birch, SpectralClustering, AgglomerativeClustering, estimate_bandwidth
 from sklearn import metrics
@@ -16,8 +17,8 @@ from math import floor
 
 # Function that preprocesses the given dataset with the given number of samples, and then
 # applies six clustering algorithms calculating their execution time, Calinski-Harabaz and
-# Silhouette scores and saves their scatter matrix in workspace directory in png format,
-# using the given dataset name for the image name.
+# Silhouette scores and saves their scatter matrix in a 'plots' directory in png format,
+# using the given dataset name combined with the algorithm name as file name.
 def ClusteringAlgorithms(dataset, samples, dataset_name):
 
     # Selection of number of samples given and normalization of the dataset
@@ -83,10 +84,20 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
         # Clusters column gets added to dataset
         modified_dataset = pd.concat([dataset, clusters], axis=1)
 
-        # And now scatter matrix is saved in workspace directory
+        # And now scatter matrix is generated with the appended dataset
         sns.set()
         variables = list(modified_dataset)
         variables.remove(column_name)
         sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
         sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
-        sns_plot.savefig(name+"-"+dataset_name+".png")
+
+        # Directory is created if does not exist
+        script_dir = os.path.dirname(__file__)
+        results_dir = os.path.join(script_dir, 'plots/')
+        file_name = name+"-"+dataset_name+".png"
+
+        if not os.path.isdir(results_dir):
+            os.makedirs(results_dir)
+
+        # File plot is saved in 'plots' directory
+        sns_plot.savefig(results_dir + file_name)
