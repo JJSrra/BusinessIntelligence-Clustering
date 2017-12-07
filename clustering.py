@@ -14,7 +14,12 @@ from sklearn import preprocessing
 
 from math import floor
 
+# Function that preprocesses the given dataset with the given number of samples, and then
+# applies six clustering algorithms calculating their execution time, Calinski-Harabaz and
+# Silhouette scores and saves their scatter matrix in workspace directory in png format,
+# using the given dataset name for the image name.
 def ClusteringAlgorithms(dataset, samples, dataset_name):
+
     # Selection of number of samples given and normalization of the dataset
     samples_dataset = dataset.sample(samples)
     normalized_dataset = preprocessing.normalize(samples_dataset, norm='l2')
