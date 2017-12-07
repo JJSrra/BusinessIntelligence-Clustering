@@ -51,21 +51,26 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
     print("-----------------------{}-----------------------".format(dataset_name))
 
     for name, algorithm in clustering_algorithms:
-        print("{:20s}".format(name), end='')
+        #print("{:20s}".format(name), end='')
+        print("{} && ".format(name), end='')
         t1 = time.time()
         cluster_predict = algorithm.fit_predict(normalized_dataset)
         t2 = time.time() - t1
         k = len(set(cluster_predict))
-        print("| k: {:3.0f}, ".format(k),end='')
-        print("{:0.2f} seconds, ".format(t2),end='')
+        print("{} && ".format(k), end='')
+        print("{:.3f} && ".format(t2), end='')
+        #print("| k: {:3.0f}, ".format(k),end='')
+        #print("{:0.3f} seconds, ".format(t2),end='')
         if (k>1) and (name is not "Ward"):
             metric_CH = metrics.calinski_harabaz_score(normalized_dataset, cluster_predict)
             metric_SC = metrics.silhouette_score(normalized_dataset, cluster_predict, metric='euclidean', sample_size=floor(0.1*len(normalized_dataset)), random_state=123456)
         else:
             metric_CH = 0
             metric_SC = 0
-        print("CH Index: {:9.3f}, ".format(metric_CH),end='')
-        print("SC: {:.5f}".format(metric_SC))
+        #print("CH Index: {:9.3f}, ".format(metric_CH),end='')
+        #print("SC: {:.5f}".format(metric_SC))
+        print("{:.3f} && ".format(metric_CH), end='')
+        print("{:.5f}".format(metric_SC))
 
         # Assignment gets turned into DataFrame
         column_name = name + " clusters"
