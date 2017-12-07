@@ -57,6 +57,8 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
         ("Ward", ward)
     ]
 
+    print("-----------------------{}-----------------------".format(dataset_name))
+
     for name, algorithm in clustering_algorithms:
         print("{:20s}".format(name), end='')
         t1 = time.time()
