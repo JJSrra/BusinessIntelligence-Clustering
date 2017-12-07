@@ -6,8 +6,6 @@
 
 import pandas as pd
 
-from sklearn import preprocessing
-
 import clustering
 
 accidents = pd.read_csv('accidentes_2013.csv')
@@ -26,17 +24,11 @@ accidents_sample = accidents[accidents['TIPO_ACCIDENTE'].str.contains("Colisión
 selected = ['TOT_VICTIMAS', 'TOT_MUERTOS', 'TOT_HERIDOS_GRAVES', 'TOT_HERIDOS_LEVES', 'TOT_VEHICULOS_IMPLICADOS']
 
 # Subset with 'selected' variables
-accidents_subset = accidents_sample[selected].sample(500)
+accidents_subset = accidents_sample[selected]
 
-# Normalizing the subset
-subset_normal = preprocessing.normalize(accidents_subset, norm='l2')
-
-clustering.ClusteringAlgorithms(subset_normal)
+clustering.ClusteringAlgorithms(accidents_subset, 5000, "Crash accidents")
 
 '''
-# Call of KMeans function in clustering.py file
-kmeans_predict = clustering.ApplyKMeans(subset_normal, 4, 5)
-
 # assignment gets turned into DataFrame
 kmeans_clusters = pd.DataFrame(kmeans_predict,index=accidents_subset.index,columns=['kmeans_clusters'])
 '''
