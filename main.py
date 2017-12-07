@@ -24,6 +24,6 @@ crash_accidents_sample = accidents[accidents['TIPO_ACCIDENTE'].str.contains("Col
 crash_selected = ['TOT_VICTIMAS', 'TOT_MUERTOS', 'TOT_HERIDOS_GRAVES', 'TOT_HERIDOS_LEVES', 'TOT_VEHICULOS_IMPLICADOS']
 
 # Subset with 'selected' variables
-crash_accidents_subset = crash_accidents_sample[selected]
+crash_accidents_subset = crash_accidents_sample[crash_selected]
 
 clustering.ClusteringAlgorithms(crash_accidents_subset, 5000, "Crash accidents")
