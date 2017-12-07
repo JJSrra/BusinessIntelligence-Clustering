@@ -74,7 +74,7 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
         clusters = pd.DataFrame(cluster_predict,index=samples_dataset.index,columns=[column_name])
 
         # Clusters column gets added to dataset
-        modified_dataset = pd.concat([samples_dataset, clusters], axis=1)
+        modified_dataset = pd.concat([dataset, clusters], axis=1)
 
         # And now scatter matrix is saved in workspace directory
         sns.set()
