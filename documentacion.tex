@@ -29,4 +29,30 @@
 	\section{Introducción}
 	En esta práctica se tratará de interpretar el comportamiento de distintos algoritmos de clustering, trabajando sobre una base de datos de accidentes en España en el año 2013. Eligiendo distintos subconjuntos del conjunto total de datos se elaborarán 3 casos de estudio sobre los que ejecutar los algoritmos. Estos algoritmos de clustering seleccionados para el estudio son \textbf{K-Means, DBSCAN, Spectral Clustering, Birch y Ward}.
 	
+	\section{Caso de estudio 1}
+	
+	\subsection{¿Qué se analiza?}
+	En el primero de estos casos de estudio se van a analizar los accidentes que han tenido lugar en autovías y autopistas. Se comprobará cuántos vehículos suelen verse involucrados en estos accidentes y cómo se distribuyen las cifras de heridos y víctimas mortales.
+	
+	\subsection{Resultados de los algoritmos}
+	A continuación se muestra una tabla que refleje los resultados de los distintos algoritmos para este primer caso de estudio. En la tabla se incluyen el número de clusters en los que el algoritmo ha segmentado los ejemplos, el tiempo de ejecución y los scores obtenidos según las métricas de Calinski-Harabaz y Silhouette.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{12}{c} }
+			\toprule
+			\textbf{Algorithm} && \textbf{Clusters} && \textbf{Execution time} && \textbf{CH Score} && \textbf{Silhouette Score}\\
+			\midrule
+			K-Means && 4 && 0.682 && 7362.737 && 0.76754\\
+			DBSCAN && 16 && 0.209 && 221.446 && 0.14467\\
+			Birch && 4 && 0.151 && 4425.728 && 0.70268\\
+			Spectral Clustering && 4 && 4.523 && 5655.098 && 0.72585\\
+			Ward && 100 && 0.550 && 0.000 && 0.00000\\
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Resultados de los algoritmos de clustering para el primer caso de estudio.}
+	\end{table}
+	
 \end{document}
