@@ -15,15 +15,16 @@ from sklearn import preprocessing
 
 from math import floor
 
-# Function that preprocesses the given dataset with the given number of samples, and then
-# applies six clustering algorithms calculating their execution time, Calinski-Harabaz and
-# Silhouette scores and saves their scatter matrix in a 'plots' directory in png format,
+# Function that preprocesses the given dataset, and then applies five clustering
+# algorithms calculating their execution time, Calinski-Harabaz and Silhouette
+# scores and saves their scatter matrix in a 'plots' directory in png format,
 # using the given dataset name combined with the algorithm name as file name.
-def ClusteringAlgorithms(dataset, samples, dataset_name):
+# If the dataset's size is under 100 samples, it also saves a heatmap and dendrogram
+# for each algorithm.
+def ClusteringAlgorithms(dataset, dataset_name):
 
-    # Selection of number of samples given and normalization of the dataset
-    samples_dataset = dataset.sample(samples)
-    normalized_dataset = preprocessing.normalize(samples_dataset, norm='l2')
+    # Normalization of the dataset
+    normalized_dataset = preprocessing.normalize(dataset, norm='l2')
 
     # K-Means
     k_means = KMeans(init='k-means++', n_clusters=4, n_init=5)
@@ -38,7 +39,12 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
     spectral = SpectralClustering(n_clusters=4)
 
     # Ward
-    ward = AgglomerativeClustering(n_clusters=100, linkage='ward')
+    hierarchical_clusters = 100
+    half_dataset_size = floor(dataset.shape[0]/2)
+    if hierarchical_clusters > half_dataset_size:
+        hierarchical_clusters = half_dataset_size
+
+    ward = AgglomerativeClustering(n_clusters=hierarchical_clusters, linkage='ward')
 
     clustering_algorithms = [
         ("K-Means", k_means),
@@ -74,25 +80,42 @@ def ClusteringAlgorithms(dataset, samples, dataset_name):
 
         # Assignment gets turned into DataFrame
         column_name = name + " clusters"
-        clusters = pd.DataFrame(cluster_predict,index=samples_dataset.index,columns=[column_name])
+        clusters = pd.DataFrame(cluster_predict,index=dataset.index,columns=[column_name])
 
         # Clusters column gets added to dataset
         modified_dataset = pd.concat([dataset, clusters], axis=1)
 
-        # And now scatter matrix is generated with the appended dataset
-        sns.set()
-        variables = list(modified_dataset)
-        variables.remove(column_name)
-        sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
-        sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
-
-        # Directory is created if does not exist
+        # Define directory path
         script_dir = os.path.dirname(__file__)
-        results_dir = os.path.join(script_dir, 'plots/')
-        file_name = name+"-"+dataset_name+".png"
 
-        if not os.path.isdir(results_dir):
-            os.makedirs(results_dir)
+        if (dataset.shape[0] > 100):
+            # And now scatter matrix is generated with the appended dataset
+            sns.set()
+            variables = list(modified_dataset)
+            variables.remove(column_name)
+            sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
+            sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
 
-        # File plot is saved in 'plots' directory
-        sns_plot.savefig(results_dir + file_name)
+            # Directory is created if does not exist
+            plot_dir = os.path.join(script_dir, 'plots/')
+            plot_name = name+"-"+dataset_name+"-ScatterMatrix.png"
+
+            if not os.path.isdir(plot_dir):
+                os.makedirs(plot_dir)
+
+            # File plot is saved in 'plots' directory
+            sns_plot.savefig(plot_dir + plot_name)
+
+        else:
+            # Heatmap
+            sns.set()
+            heatmap = sns.heatmap(modified_dataset)
+            heatmap_fig = heatmap.get_figure()
+
+            heatmap_dir = os.path.join(script_dir, 'heatmaps/')
+            heatmap_name = name+"-"+dataset_name+"-Heatmap.png"
+
+            if not os.path.isdir(heatmap_dir):
+                os.makedirs(heatmap_dir)
+
+            heatmap_fig.savefig(heatmap_dir + heatmap_name)
