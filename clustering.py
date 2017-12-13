@@ -7,11 +7,14 @@
 import time
 import seaborn as sns
 import pandas as pd
+import numpy as np
 import os
 
 from sklearn.cluster import KMeans, DBSCAN, Birch, SpectralClustering, AgglomerativeClustering
 from sklearn import metrics
 from sklearn import preprocessing
+
+import matplotlib.pyplot as plt
 
 from math import floor
 
@@ -88,15 +91,16 @@ def ClusteringAlgorithms(dataset, dataset_name):
         # Define directory path
         script_dir = os.path.dirname(__file__)
 
+        # Now depending on the dataset's size...
         if (dataset.shape[0] > 100):
-            # And now scatter matrix is generated with the appended dataset
+            # ... the scatter matrix is generated with the appended dataset
             sns.set()
             variables = list(modified_dataset)
             variables.remove(column_name)
             sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
             sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
 
-            # Directory is created if does not exist
+            # Directory is created if does not already exist
             plot_dir = os.path.join(script_dir, 'plots/')
             plot_name = name+"-"+dataset_name+"-ScatterMatrix.png"
 
@@ -107,15 +111,33 @@ def ClusteringAlgorithms(dataset, dataset_name):
             sns_plot.savefig(plot_dir + plot_name)
 
         else:
-            # Heatmap
+            # ... or the heatmap is generated instead
             sns.set()
-            heatmap = sns.heatmap(modified_dataset)
-            heatmap_fig = heatmap.get_figure()
 
+            # Directory is created if does not already exist
             heatmap_dir = os.path.join(script_dir, 'heatmaps/')
             heatmap_name = name+"-"+dataset_name+"-Heatmap.png"
 
             if not os.path.isdir(heatmap_dir):
                 os.makedirs(heatmap_dir)
 
+            # List of clusters that
+            clusters_list = list(set(modified_dataset[column_name]))
+            mean_dataframe = pd.DataFrame()
+
+            for cluster in clusters_list:
+                cluster_dataframe = modified_dataset[modified_dataset[column_name] == cluster]
+                variables = list(cluster_dataframe)
+                variables.remove(column_name)
+                mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
+                aux_dataframe = pd.DataFrame(mean_array,index=[str(cluster)])
+                mean_dataframe = pd.concat([mean_dataframe,aux_dataframe])
+
+            mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
+            mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
+            heatmap = sns.heatmap(data=mean_dataframe_normalized, cmap="RdYlGn", annot=True, linewidths=0.5)
+
+            plt.ylabel('Clusters')
+            plt.show()
+            heatmap_fig = heatmap.get_figure()
             heatmap_fig.savefig(heatmap_dir + heatmap_name)
