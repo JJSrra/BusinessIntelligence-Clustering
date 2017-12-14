@@ -91,55 +91,58 @@ def ClusteringAlgorithms(dataset, dataset_name):
         # Define directory path
         script_dir = os.path.dirname(__file__)
 
-        # Now depending on the dataset's size...
-        if (dataset.shape[0] > 100):
-            # ... the scatter matrix is generated with the appended dataset
-            sns.set()
-            variables = list(modified_dataset)
+        # Now the scatter matrix is generated with the appended dataset
+        sns.set()
+        variables = list(modified_dataset)
+        variables.remove(column_name)
+        sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
+        sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
+
+        # Directory is created if does not already exist
+        plot_dir = os.path.join(script_dir, 'plots/')
+        plot_name = name+"-"+dataset_name+"-ScatterMatrix.png"
+
+        if not os.path.isdir(plot_dir):
+            os.makedirs(plot_dir)
+
+        # File plot is saved in 'plots' directory
+        sns_plot.savefig(plot_dir + plot_name)
+        sns_plot.fig.clear()
+
+        # And the heatmap comparing variables values in each cluster
+        # Directory is created if does not already exist
+        heatmap_dir = os.path.join(script_dir, 'heatmaps/')
+        heatmap_name = name+"-"+dataset_name+"-Heatmap.png"
+
+        if not os.path.isdir(heatmap_dir):
+            os.makedirs(heatmap_dir)
+
+        # List of clusters that have been defined by the algorithm
+        clusters_list = list(set(modified_dataset[column_name]))
+
+        # Creation of an empty DataFrame that will be filled with a row for each cluster,
+        # each column equal to the mean value of the variable for the examples in the cluster
+        mean_dataframe = pd.DataFrame()
+
+        for cluster in clusters_list:
+            cluster_dataframe = modified_dataset[modified_dataset[column_name] == cluster]
+            variables = list(cluster_dataframe)
             variables.remove(column_name)
-            sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
-            sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
+            mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
+            aux_dataframe = pd.DataFrame(mean_array,index=[str(cluster)])
+            mean_dataframe = pd.concat([mean_dataframe,aux_dataframe])
 
-            # Directory is created if does not already exist
-            plot_dir = os.path.join(script_dir, 'plots/')
-            plot_name = name+"-"+dataset_name+"-ScatterMatrix.png"
+        # Normalization of the DataFrame, for an accurate representation in a heatmap
+        mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
+        mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
 
-            if not os.path.isdir(plot_dir):
-                os.makedirs(plot_dir)
+        # Heatmap is defined and saved in the formerly defined directory
+        heatmap = sns.heatmap(data=mean_dataframe_normalized,
+                cmap=sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True),
+                annot=True, linewidths=0.5)
 
-            # File plot is saved in 'plots' directory
-            sns_plot.savefig(plot_dir + plot_name)
-
-        else:
-            # ... or the heatmap is generated instead
-            sns.set()
-
-            # Directory is created if does not already exist
-            heatmap_dir = os.path.join(script_dir, 'heatmaps/')
-            heatmap_name = name+"-"+dataset_name+"-Heatmap.png"
-
-            if not os.path.isdir(heatmap_dir):
-                os.makedirs(heatmap_dir)
-
-            # List of clusters that
-            clusters_list = list(set(modified_dataset[column_name]))
-            mean_dataframe = pd.DataFrame()
-
-            for cluster in clusters_list:
-                cluster_dataframe = modified_dataset[modified_dataset[column_name] == cluster]
-                variables = list(cluster_dataframe)
-                variables.remove(column_name)
-                mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
-                aux_dataframe = pd.DataFrame(mean_array,index=[str(cluster)])
-                mean_dataframe = pd.concat([mean_dataframe,aux_dataframe])
-
-            mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
-            mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
-            heatmap = sns.heatmap(data=mean_dataframe_normalized,
-                    cmap=sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True),
-                    annot=True, linewidths=0.5)
-
-            plt.ylabel('Clusters')
-            plt.show()
-            heatmap_fig = heatmap.get_figure()
-            heatmap_fig.savefig(heatmap_dir + heatmap_name)
+        plt.ylabel('Clusters')
+        heatmap_fig = heatmap.get_figure()
+        heatmap_fig.savefig(heatmap_dir + heatmap_name)
+        heatmap.clear()
+        heatmap_fig.clear()
