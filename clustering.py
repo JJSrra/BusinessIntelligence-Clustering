@@ -14,6 +14,8 @@ from sklearn.cluster import KMeans, DBSCAN, Birch, SpectralClustering, Agglomera
 from sklearn import metrics
 from sklearn import preprocessing
 
+from scipy.cluster import hierarchy
+
 import matplotlib.pyplot as plt
 
 from math import floor
@@ -143,15 +145,27 @@ def ClusteringAlgorithms(dataset, dataset_name):
 
         # Normalization of the DataFrame, for an accurate representation in a heatmap
         mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
-        mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
+        mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, index=clusters_list, columns=list(mean_dataframe))
 
         # Heatmap is defined and saved in the formerly defined directory
+        my_cmap = sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True)
         heatmap = sns.heatmap(data=mean_dataframe_normalized, yticklabels=list(set(filtered_dataset[column_name])),
-                cmap=sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True),
-                annot=True, linewidths=0.5)
+                cmap=my_cmap, annot=True, linewidths=0.5)
 
         plt.ylabel('Clusters')
         heatmap_fig = heatmap.get_figure()
         heatmap_fig.savefig(heatmap_dir + heatmap_name)
         heatmap.clear()
         heatmap_fig.clear()
+
+        # If the algorithm is agglomerative (as Ward is in this case study) an additional
+        # dendrogram is generated in 'dendrogram' folder
+        if name == "Ward":
+            dendrogram_dir = os.path.join(script_dir, 'dendrograms/')
+            dendrogram_name = name+"-"+dataset_name+"-Dendrogram.png"
+
+            if not os.path.isdir(dendrogram_dir):
+                os.makedirs(dendrogram_dir)
+
+            dendrogram = sns.clustermap(mean_dataframe_normalized, method='ward', col_cluster=False, annot=True, figsize=(20,10), cmap=my_cmap)
+            dendrogram.savefig(dendrogram_dir + dendrogram_name)
