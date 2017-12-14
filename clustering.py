@@ -22,7 +22,7 @@ from math import floor
 # algorithms calculating their execution time, Calinski-Harabaz and Silhouette
 # scores and saves their scatter matrix in a 'plots' directory in png format,
 # using the given dataset name combined with the algorithm name as file name.
-# If the dataset's size is under 100 samples, it also saves a heatmap and dendrogram
+# If the dataset's size is under 100 samples, it also saves a heatmap
 # for each algorithm.
 def ClusteringAlgorithms(dataset, dataset_name):
 
@@ -135,7 +135,9 @@ def ClusteringAlgorithms(dataset, dataset_name):
 
             mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
             mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
-            heatmap = sns.heatmap(data=mean_dataframe_normalized, cmap="RdYlGn", annot=True, linewidths=0.5)
+            heatmap = sns.heatmap(data=mean_dataframe_normalized,
+                    cmap=sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True),
+                    annot=True, linewidths=0.5)
 
             plt.ylabel('Clusters')
             plt.show()
