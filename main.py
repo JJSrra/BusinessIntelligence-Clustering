@@ -30,6 +30,6 @@ early_morning_accidents_subset = early_morning_accidents_sample[selected]
 wet_overturned_accidents_subset = wet_overturned_accidents_sample[selected]
 
 # Clustering Algorithms for each of the selected subsets
-clustering.ClusteringAlgorithms(highway_accidents_subset, "Highway accidents")
-#clustering.ClusteringAlgorithms(early_morning_accidents_subset, "Morning accidents")
+#clustering.ClusteringAlgorithms(highway_accidents_subset, "Highway accidents")
+clustering.ClusteringAlgorithms(early_morning_accidents_subset, "Early morning accidents")
 #clustering.ClusteringAlgorithms(wet_overturned_accidents_subset, "Wet overturned accidents")
