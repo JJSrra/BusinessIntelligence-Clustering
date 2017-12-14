@@ -79,7 +79,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
         #print("CH Index: {:9.3f}, ".format(metric_CH),end='')
         #print("SC: {:.5f}".format(metric_SC))
         print("{:.3f} && ".format(metric_CH), end='')
-        print("{:.5f}".format(metric_SC))
+        print("{:.5f} && ".format(metric_SC), end='')
 
         # Assignment gets turned into DataFrame
         column_name = 'cluster'
@@ -89,10 +89,15 @@ def ClusteringAlgorithms(dataset, dataset_name):
         modified_dataset = pd.concat([dataset, clusters], axis=1)
 
         # Filter those clusters with outliers samples (clusters that represent less than 3% of the dataset)
-        min_size = floor(modified_dataset.shape[0]*0.03)
+        if len(modified_dataset) > 100:
+            min_size = floor(modified_dataset.shape[0]*0.01)
+        else:
+            min_size = 2
         filtered_dataset = modified_dataset[modified_dataset.groupby('cluster').cluster.transform(len) > min_size]
         new_k = len(set(filtered_dataset[column_name]))
-        print("De los {:.0f} clusters hay {:.0f} con más de {:.0f} elementos. Del total de {:.0f} elementos, se seleccionan {:.0f}".format(k,new_k,min_size,len(modified_dataset),len(filtered_dataset)))
+        #print("De los {:.0f} clusters hay {:.0f} con más de {:.0f} elementos. Del total de {:.0f} elementos, se seleccionan {:.0f}".format(k,new_k,min_size,len(modified_dataset),len(filtered_dataset)))
+        print("{} && ".format(new_k), end='')
+        print("{}".format(len(modified_dataset)-len(filtered_dataset)))
 
         # Define directory path
         script_dir = os.path.dirname(__file__)
@@ -132,8 +137,6 @@ def ClusteringAlgorithms(dataset, dataset_name):
 
         for cluster in clusters_list:
             cluster_dataframe = filtered_dataset[filtered_dataset[column_name] == cluster]
-            variables = list(cluster_dataframe)
-            variables.remove(column_name)
             mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
             aux_dataframe = pd.DataFrame(mean_array,index=[str(cluster)])
             mean_dataframe = pd.concat([mean_dataframe,aux_dataframe])
@@ -143,7 +146,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
         mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, columns=list(mean_dataframe))
 
         # Heatmap is defined and saved in the formerly defined directory
-        heatmap = sns.heatmap(data=mean_dataframe_normalized,
+        heatmap = sns.heatmap(data=mean_dataframe_normalized, yticklabels=list(set(filtered_dataset[column_name])),
                 cmap=sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True),
                 annot=True, linewidths=0.5)
 
