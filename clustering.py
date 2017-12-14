@@ -82,20 +82,26 @@ def ClusteringAlgorithms(dataset, dataset_name):
         print("{:.5f}".format(metric_SC))
 
         # Assignment gets turned into DataFrame
-        column_name = name + " clusters"
+        column_name = 'cluster'
         clusters = pd.DataFrame(cluster_predict,index=dataset.index,columns=[column_name])
 
         # Clusters column gets added to dataset
         modified_dataset = pd.concat([dataset, clusters], axis=1)
+
+        # Filter those clusters with outliers samples (clusters that represent less than 3% of the dataset)
+        min_size = floor(modified_dataset.shape[0]*0.03)
+        filtered_dataset = modified_dataset[modified_dataset.groupby('cluster').cluster.transform(len) > min_size]
+        new_k = len(set(filtered_dataset[column_name]))
+        print("De los {:.0f} clusters hay {:.0f} con más de {:.0f} elementos. Del total de {:.0f} elementos, se seleccionan {:.0f}".format(k,new_k,min_size,len(modified_dataset),len(filtered_dataset)))
 
         # Define directory path
         script_dir = os.path.dirname(__file__)
 
         # Now the scatter matrix is generated with the appended dataset
         sns.set()
-        variables = list(modified_dataset)
+        variables = list(filtered_dataset)
         variables.remove(column_name)
-        sns_plot = sns.pairplot(modified_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
+        sns_plot = sns.pairplot(filtered_dataset, vars=variables, hue=column_name, palette='Paired', plot_kws={"s": 25}, diag_kind="hist")
         sns_plot.fig.subplots_adjust(wspace=.03, hspace=.03);
 
         # Directory is created if does not already exist
@@ -118,14 +124,14 @@ def ClusteringAlgorithms(dataset, dataset_name):
             os.makedirs(heatmap_dir)
 
         # List of clusters that have been defined by the algorithm
-        clusters_list = list(set(modified_dataset[column_name]))
+        clusters_list = list(set(filtered_dataset[column_name]))
 
         # Creation of an empty DataFrame that will be filled with a row for each cluster,
         # each column equal to the mean value of the variable for the examples in the cluster
         mean_dataframe = pd.DataFrame()
 
         for cluster in clusters_list:
-            cluster_dataframe = modified_dataset[modified_dataset[column_name] == cluster]
+            cluster_dataframe = filtered_dataset[filtered_dataset[column_name] == cluster]
             variables = list(cluster_dataframe)
             variables.remove(column_name)
             mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
