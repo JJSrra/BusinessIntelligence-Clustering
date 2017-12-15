@@ -131,38 +131,23 @@ def ClusteringAlgorithms(dataset, dataset_name):
         # List of clusters that have been defined by the algorithm
         clusters_list = list(set(filtered_dataset[column_name]))
 
-        # Creation of two empty DataFrames that will be filled with a row for each cluster,
-        # in the first one each column equals to the mean value of the variable for the
-        # examples in the cluster, and in the second one each column equals to the standard deviation
+        # Creation of an empty DataFrame that will be filled with a row for each cluster,
+        # each column equivalent to the mean value of the variable for the
+        # examples in the cluster
         mean_dataframe = pd.DataFrame()
-        std_dataframe = pd.DataFrame()
 
         for cluster in clusters_list:
             cluster_dataframe = filtered_dataset[filtered_dataset[column_name] == cluster]
             mean_array = dict(np.mean(cluster_dataframe[variables],axis=0))
-            std_array = dict(np.std(cluster_dataframe[variables],axis=0))
             aux_mean_dataframe = pd.DataFrame(mean_array,index=[str(cluster)])
-            aux_std_dataframe = pd.DataFrame(std_array,index=[str(cluster)])
             mean_dataframe = pd.concat([mean_dataframe,aux_mean_dataframe])
-            std_dataframe = pd.concat([std_dataframe,aux_std_dataframe])
 
         # Normalization of the DataFrame, for an accurate representation in a heatmap
         mean_dataframe_normalized = preprocessing.normalize(mean_dataframe, norm='l2')
         mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, index=clusters_list, columns=list(mean_dataframe))
 
-        # Also normalization of the standard deviation
-        std_dataframe_normalized = preprocessing.normalize(std_dataframe, norm='l2')
-        std_dataframe_normalized = pd.DataFrame(std_dataframe_normalized, index=clusters_list, columns=list(std_dataframe))
-
-        # LaTeX table that represents mean and standard deviation for each variable and cluster
-        mean_dataframe_normalized.columns = mean_dataframe_normalized.columns + '_MEAN'
-        std_dataframe_normalized.columns = std_dataframe_normalized.columns + '_STD'
-        mean_std_table = pd.concat([mean_dataframe_normalized,std_dataframe_normalized], axis=1)
-        mean_std_table = mean_std_table[list(sum(zip(mean_dataframe_normalized.columns, std_dataframe_normalized.columns), ()))]
-        print(mean_std_table.to_latex(bold_rows=True, column_format=str(mean_std_table.shape[1]+1)+"*{c}"))
-
-        # Back to former column names
-        mean_dataframe_normalized.columns = mean_dataframe.columns
+        # LaTeX table that represents the mean value for each variable and cluster
+        print(mean_dataframe_normalized.to_latex(bold_rows=True, column_format=str("*{{{}}}".format(mean_dataframe_normalized.shape[1]+1)+r"{c}")))
 
         # Heatmap is defined and saved in the formerly defined directory
         my_cmap = sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True)
