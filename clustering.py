@@ -159,7 +159,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
         std_dataframe_normalized.columns = std_dataframe_normalized.columns + '_STD'
         mean_std_table = pd.concat([mean_dataframe_normalized,std_dataframe_normalized], axis=1)
         mean_std_table = mean_std_table[list(sum(zip(mean_dataframe_normalized.columns, std_dataframe_normalized.columns), ()))]
-        print(mean_std_table.to_latex(bold_rows=True, column_format="5*{c}"))
+        print(mean_std_table.to_latex(bold_rows=True, column_format=str(mean_std_table.shape[1]+1)+"*{c}"))
 
         # Back to former column names
         mean_dataframe_normalized.columns = mean_dataframe.columns
