@@ -14,8 +14,6 @@ from sklearn.cluster import KMeans, DBSCAN, Birch, SpectralClustering, Agglomera
 from sklearn import metrics
 from sklearn import preprocessing
 
-from scipy.cluster import hierarchy
-
 import matplotlib.pyplot as plt
 
 from math import floor
