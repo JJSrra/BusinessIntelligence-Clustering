@@ -147,7 +147,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
         mean_dataframe_normalized = pd.DataFrame(mean_dataframe_normalized, index=clusters_list, columns=list(mean_dataframe))
 
         # LaTeX table that represents the mean value for each variable and cluster
-        print(mean_dataframe_normalized.to_latex(bold_rows=True, column_format=str("*{{{}}}".format(mean_dataframe_normalized.shape[1]+1)+r"{c}")))
+        print(mean_dataframe.to_latex(bold_rows=True, column_format=str("*{{{}}}".format(mean_dataframe.shape[1]+1)+r"{c}")))
 
         # Heatmap is defined and saved in the formerly defined directory
         my_cmap = sns.cubehelix_palette(start=2.5, rot=0.1, light=0.75, as_cmap=True)
