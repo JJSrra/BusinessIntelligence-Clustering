@@ -30,7 +30,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
     normalized_dataset = preprocessing.normalize(dataset, norm='l2')
 
     # K-Means
-    k_means = KMeans(init='k-means++', n_clusters=4, n_init=5)
+    k_means = KMeans(init='k-means++', n_clusters=4, n_init=5, random_state=101010)
 
     # DBSCAN
     dbscan = DBSCAN(eps=0.1)
@@ -39,7 +39,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
     birch = Birch(threshold=0.1, n_clusters=4)
 
     # Spectral Clustering
-    spectral = SpectralClustering(n_clusters=4)
+    spectral = SpectralClustering(n_clusters=4, random_state=101010)
 
     # Ward
     hierarchical_clusters = 100
