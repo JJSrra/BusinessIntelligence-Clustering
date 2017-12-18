@@ -138,7 +138,7 @@
 				\bottomrule
 			\end{tabular}
 		}
-		\caption{Tabla de valores medios del algoritmo K-Means para el primer caso de estudio.}
+		\caption{Tabla de valores medios del algoritmo Birch para el primer caso de estudio.}
 	\end{table}
 
 	Y por último, también se muestra el heatmap que representa el valor medio normalizado por cada variable para cada uno de los clusters, para ayudar a visualizar la tabla anterior de forma más clara.
@@ -199,6 +199,89 @@
 		\caption{Resultados de los algoritmos de clustering para el segundo caso de estudio.}
 	\end{table}
 
-	En este caso los resultados de los scores vuelven a ser muy similares al primer caso de estudio, pero como ya hemos trabajado con K-Means, en esta ocasión lo haremos con \textbf{Spectral Clustering}. Además, para esta ocasión contaremos también con un análisis del algoritmo \textbf{Ward}, un algoritmo de clustering jerárquico aglomerativo que genera una gran cantidad de clusters (tantos como individuos haya en la población) y los va uniendo dos a dos en cada paso, para acabar obteniendo el número de clusters indicado como parámetro. Estos dos algoritmos serán el objeto de estudio para este caso.
+	En este caso los resultados de los scores vuelven a ser muy similares al primer caso de estudio, pero como ya hemos trabajado con K-Means, en esta ocasión lo haremos con \textbf{Spectral Clustering}. Además, para esta ocasión contaremos también con un análisis del algoritmo \textbf{Ward}, un algoritmo de clustering jerárquico aglomerativo que genera una gran cantidad de clusters (tantos como individuos haya en la población) y los va uniendo dos a dos en cada paso, para acabar obteniendo el número de clusters indicado como parámetro. A pesar de tener un montón de clusters inicialmente (100, los indicados en el código como parámetro) estos se ven reducidos cuando se aplica el filtrado del 1\%, por lo que trabajar con 9 clusters es ya más manejable. Estos dos algoritmos serán el objeto de estudio para este caso.
+	
+	\subsubsection{Spectral Clustering}
+	En primer lugar se muestra la matriz de dispersión del algoritmo Spectral Clustering para el segundo caso de estudio.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{plots/SpectralClustering-EarlyMorningAccidents-ScatterMatrix.png}
+		\caption{Matriz de dispersión del algoritmo Spectral Clustering para el segundo caso de estudio.}
+	\end{figure}
+	
+	Ahora se muestra la tabla de medias por variable para cada cluster para este algoritmo.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{*{6}{c}}
+				\toprule
+				\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+				\midrule
+				\textbf{0} &            0.023976 &           1.677263 &     0.002963 &                  1.254849 &      1.704203 \\
+				\textbf{1} &            1.160686 &           0.198128 &     0.012480 &                  1.332293 &      1.371295 \\
+				\textbf{2} &            0.170068 &           0.156463 &     1.081633 &                  1.326531 &      1.408163 \\
+				\textbf{3} &            0.016338 &           1.044929 &     0.001361 &                  2.282505 &      1.062628 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Tabla de valores medios del algoritmo Spectral Clustering para el segundo caso de estudio.}
+	\end{table}
+	
+	Se puede observar por último el heatmap correspondiente a los valores normalizados del caso anterior para el mismo algoritmo y cada uno de sus clusters.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{heatmaps/SpectralClustering-EarlyMorningAccidents-Heatmap.png}
+		\caption{Heatmap del algoritmo Spectral Clustering para el segundo caso de estudio.}
+	\end{figure}
+	
+	\subsubsection{Ward}
+	Se muestra a continuación la matriz de dispersión del algoritmo Ward para el segundo caso de estudio, ya con el filtrado de clusters aplicado.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{plots/Ward-EarlyMorningAccidents-ScatterMatrix.png}
+		\caption{Matriz de dispersión del algoritmo Ward para el segundo caso de estudio.}
+	\end{figure}
+	
+	A continuación se puede ver la tabla de valores medios por cada variable y cluster que ha agrupado el algoritmo Ward.
+	
+	\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{*{6}{c}}
+			\toprule
+			\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+			\midrule
+			\textbf{66} &            0.000000 &           1.008772 &     0.000000 &                  3.026316 &      1.008772 \\
+			\textbf{6 } &            1.008475 &           0.000000 &     0.000000 &                  2.016949 &      1.008475 \\
+			\textbf{8 } &            0.000000 &           1.013832 &     0.000000 &                  2.027665 &      1.013832 \\
+			\textbf{9 } &            0.000000 &           3.176471 &     0.000000 &                  1.058824 &      3.176471 \\
+			\textbf{13} &            1.040761 &           0.000000 &     0.000000 &                  1.040761 &      1.040761 \\
+			\textbf{15} &            0.000000 &           2.358025 &     0.000000 &                  1.179012 &      2.358025 \\
+			\textbf{16} &            0.000000 &           1.196324 &     0.000000 &                  1.196324 &      1.196324 \\
+			\textbf{18} &            0.000000 &           3.000000 &     0.000000 &                  2.000000 &      3.000000 \\
+			\textbf{92} &            0.000000 &           0.000000 &     1.012346 &                  1.012346 &      1.012346 \\
+			\bottomrule
+		\end{tabular}
+	}
+	\caption{Tabla de valores medios del algoritmo Spectral Clustering para el segundo caso de estudio.}
+	\end{table}
+	
+	Para el algoritmo Ward, al ser un algoritmo jerárquico, se ha construido un dendrograma para analizar la similitud de sus clusters resultantes y cómo se agrupan. Este dendrograma aparece junto al heatmap, y se ha calculado utilizando el método ``clustermap'' del paquete \textit{seaborn}.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{dendrograms/Ward-EarlyMorningAccidents-Dendrogram.png}
+		\caption{Dendrograma del algoritmo Ward junto a su heatmap para el segundo caso de estudio.}
+	\end{figure}
+	
+	\subsection{Interpretación de la segmentación}
+	En este apartado final del segundo caso de estudio se realizará una interpretación del contenido de los distintos clusters que cada algoritmo ha agrupado y se intentará dar una visión acertada de los rasgos que caracterizan a cada uno de ellos. Para ello se hará uso de las gráficas y tablas expuestas en el apartado anterior.
+	
+	\subsubsection{Spectral Clustering}
+	
 	
 \end{document}
