@@ -162,10 +162,23 @@
 	\subsubsection{Birch}
 	A diferencia de los clusters en los que se ha dividido anteriormente el algoritmo K-Means, este algoritmo ha reducido el número de clusters y representa esencialmente lo mismo en 3. El cluster 0 del algoritmo Birch es muy similar al agrupamiento que se encuentra en el cluster 3 del K-Means, el que tiene mayor cantidad de muertos y heridos graves. Tanto en la tabla de medias como en el heatmap se puede observar que este cluster es el que contiene los accidentes más graves, y con pocos vehículos implicados, por lo que entendemos que generalmente se trata de colisiones entre dos vehículos o de colisión frontolateral de algún vehículo con una mediana, y que generalmente han debido ser a gran velocidad para causar un impacto tan grande.\\
 	
-	Es destacable que algo similar ocurre con los clusters 1 y 2 de Birch; el cluster 1 de Birch es casi un calco del cluster 1 de K-Means, y el cluster 2 de Birch lo es del cluster 0 de K-Means.\\
+	No obstante, dicho cluster no supone una gran representación dentro del algoritmo. Si se observa la matriz de confusión de Birch se puede apreciar en distintas gráficas, entre ellas cualquiera en la que a raíz de los datos anteriores vayamos a saber que aparece este cluster, como la que representa total de muertos con el total de víctimas, que el número de puntos de la nube de puntos de la gráfica correspondientes al cluster 0 es escaso. Esto quiere decir que, o los datos están muy juntos (son muy similares), o el número de ejemplos de dicha clase es muy pequeño. A juzgar por los valores tan pequeños que tiene toda la columna de medias de muertos en el heatmap, y que el resto de clusters aparecen con una cantidad de puntos mucho mayor en cada una de las demás gráficas, considero que es un cluster que constituye pocos ejemplos.\\
+	
+	Es destacable que algo similar a lo que ocurre con el cluster 0 y el cluster 3 de K-Means ocurre con los clusters 1 y 2; el cluster 1 de Birch es casi un calco del cluster 1 de K-Means, y el cluster 2 de Birch lo es del cluster 0 de K-Means.\\
 	
 	La mejor forma de interpretar este hecho es que Birch prácticamente ha rehecho las agrupaciones de K-Means, con unas pequeñas fluctuaciones en los valores medios de cada variable debido a los cambios de asignaciones a cluster que pueda haber en las fronteras. Como podíamos observar en la tabla de resultados de los algoritmos (tabla \ref{tablaTodos1}), Birch deja un cluster sin validez al tener menos del 1\% de los datos, y este podría ser el equivalente al cluster 2 de K-Means, que era similar al cluster 0 pero con unas varianzas mayores en términos de total de vehículos implicados y de víctimas.\\
 	
 	Los ejemplos de Birch por tanto están clasificados siguiendo el mismo esquema que en el caso anterior, pero reducidos a un total de 3 clusters. Por la mayor diversidad que ofrece K-Means al repartir mejor sus ejemplos y por sus mejores métricas tanto Calinski-Harabaz como Silhouette, creo que es el que mejor solución obtiene de los dos, y casi aún más importante, en el que más visual e interpretativo resulta su análisis.
+	
+	\section{Caso de estudio 2}
+	
+	\subsection{¿Qué se analiza?}
+	El segundo caso de estudio que se va a analizar en la práctica tiene como centro de atención los \textbf{accidentes ocurridos de madrugada}, es decir, aquellos que ocurren entre las 0:00 y las 6:00 según el criterio que he seguido. Las características que se van a tener en cuenta son las mismas que en el caso anterior, a saber, número de heridos graves y leves, número total de víctimas, número de vehículos implicados y número de muertos. De nuevo se buscará saber cómo se distribuyen principalmente los accidentes en estas horas, cuántas personas mueren o se hieren de gravedad y si representan un gran número de ejemplos o son casos que se pueden considerar aislados.\\
+	
+	Este caso de estudio tiene un tamaño medio. Está compuesto por 5969 ejemplos.
+	
+	\subsection{Resultados de los algoritmos}
+	
+	A continuación se muestra la tabla de los resultados de los algoritmos para este segundo caso de estudio.
 	
 \end{document}
