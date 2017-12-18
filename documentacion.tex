@@ -34,7 +34,7 @@
 	\section{Caso de estudio 1}
 	
 	\subsection{¿Qué se analiza?}
-	En el primero de estos casos de estudio se van a analizar los \textbf{accidentes que han tenido lugar en autovías y autopistas}. Se comprobará cuántos vehículos suelen verse involucrados en estos accidentes y cómo se distribuyen las cifras de heridos y víctimas mortales. En particular, todas las características seleccionadas para el estudio han sido el número de vehículos implicados, el número de heridos graves y leves, el número de fallecidos y el total de víctimas afectadas.\\
+	En el primero de estos casos de estudio se van a analizar los \textbf{accidentes que han tenido lugar en autovías y autopistas}. Las características seleccionadas para el estudio han sido el número de vehículos implicados, el número de heridos graves y leves, el número de fallecidos y el total de víctimas afectadas. Se comprobará cuántos vehículos suelen verse involucrados en estos accidentes y cómo se distribuyen las cifras de heridos y víctimas mortales, es decir, tratar de valorar si la cifra de fallecidos en accidentes de este ámbito representa un dato sustancial frente al total de accidentes o son una pequeña muestra dentro de los accidentes registrados.\\
 	
 	Este caso de estudio en cuestión cuenta con 11943 ejemplos. Es el más vasto de los que se van a estudiar,
 	
@@ -56,18 +56,29 @@
 			\toprule
 			\textbf{Algorithm} & \textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
 			\midrule
-			K-Means & 4 & 0.051 & 17443.397 & 0.74487 & 4 & 0 \\
-			DBSCAN & 26 & 0.888 & 322.707 & 0.31788 & 3 & 530 \\
-			Birch & 4 & 0.368 & 10526.549 & 0.67967 & 3 & 91 \\
-			Spectral Clustering & 4 & 44.247 & 13864.674 & 0.71842 & 4 & 0 \\
-			Ward & 100 & 3.131 & 0.000 & 0.00000 & 10 & 1186 \\
+			K-Means & 4 & 0.349 & 17443.397 & 0.74487 & 4 & 0 \\			
+			DBSCAN & 26 & 0.895 & 322.707 & 0.31788 & 3 & 530 \\			
+			Birch & 4 & 0.374 & 10526.549 & 0.67967 & 3 & 91 \\			
+			Spectral Clustering & 4 & 53.784 & 13864.674 & 0.71842 & 4 & 0 \\			
+			Ward & 100 & 3.251 & 0.000 & 0.00000 & 10 & 1186 \\
 			\bottomrule
 			\end{tabular}$
 		}
 		\caption{Resultados de los algoritmos de clustering para el primer caso de estudio.}
 	\end{table}
 
-	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrará en primera instancia una tabla que refleje los valores medios de cada una de las variables seleccionadas en el caso de estudio para cada uno de los clusters que han quedado tras el filtrado. En primer lugar se muestra la tabla de valores medios del algoritmo \textbf{K-Means}.
+	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrarán una matriz de dispersión y un mapa de calor (\textit{heatmap}). Los algoritmos elegidos para el análisis de este caso de estudio son \textbf{K-Means} y \textbf{Spectral Clustering}.
+	
+	\subsubsection{K-Means}
+	En primer lugar se incluye la matriz de dispersión del algortimo K-Means.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{plots/K-Means-HighwayAccidents-ScatterMatrix.png}
+		\caption{Matriz de dispersión del algoritmo K-Means para el primer caso de estudio.}
+	\end{figure}
+
+	Para ayudar a la interpretación de la matriz de dispersión se ha incluido una tabla que comprende los valores medios de cada variable a estudiar para cada uno de los clusters que han quedado tras el filtrado, que son los mismos que se muestran en la gráfica anterior.
 
 	\begin{table}[H]
 		\centering
@@ -85,5 +96,21 @@
 		}
 		\caption{Tabla de valores medios del algoritmo K-Means para el primer caso de estudio.}
 	\end{table}
+	
+	Por último, también se incluye un heatmap para mostrar cómo se distribuyen los valores de cada variable entre los clusters de una forma más ilustrativa. En este caso se representan los clusters contra las variables, y en cada casilla aparece el valor medio normalizado para dicha variable.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{heatmaps/K-Means-HighwayAccidents-Heatmap.png}
+		\caption{Heatmap del algoritmo K-Means para el primer caso de estudio.}
+	\end{figure}
+
+	\subsection{Interpretación de la segmentación}
+	En este apartado final se analizarán los resultados obtenidos basándonos en lo que se muestra en las gráficas y se intentará dar la visión más profesional posible de lo que se puede valorar de los datos recogidos.\\
+	
+	\subsubsection{K-Means}
+	Observando la representación de la matriz de confusión, y apoyándonos en los datos de la tabla, se puede interpretar fácilmente a qué tipo de accidente se corresponde cada cluster. El cluster 0 y el cluster 2 son muy parecidos, siendo ambos accidentes donde no hay muchas víctimas graves ni fallecidos, pero sin embargo hay una gran cantidad de heridos leves, por lo que su total de víctimas asciende considerablemente. En particular, el cluster 0 recoge mayormente aquellos accidentes en los que habiendo menos vehículos se han producido más víctimas, presumiblemente por un choque más fuerte entre dos vehículos, mientras que el cluster 2 recoge los accidentes con más implicados y algo menos de víctimas, como puede ser el caso de leves colisiones en fila de varios vehículos que solo suelen dejar pequeñas secuelas. Estos datos, aparte de con la tabla de valores medios, pueden verse claramente reflejados en el heatmap del algoritmo, con la leyenda de color señalando dónde hay más víctimas y heridos leves. Adicionalmente, en la matriz de dispersión, se puede observar muy bien lo parecidos que son ambos clusters, y sin embargo cómo se pueden diferenciar, en alguna gráfica como la que representa el total de víctimas frente al total de heridos leves.\\
+	
+	Como la contraparte a estos dos clusters, el cluster 3 es posiblemente el más devastador, ya que representa accidentes que han tenido también bastantes víctimas pero estas han resultado heridas gravemente o han fallecido. En la matriz de dispersión puede observarse, en la intersección entre la fila y la columna que representan el total de muertos, que sin embargo hay bastantes ejemplos de este cluster que no representan accidentes mortales. No obstante, en la gráfica se aprecia que la mayor parte de todos los demás accidentes que han causado algún muerto están en el cluster 3. Además, esa misma gráfica revela un dato que teníamos como objeto de nuestro estudio: \textbf{los accidentes que suceden en autovías y autopistas no suponen víctimas mortales en la mayoría de los casos.} 
 	
 \end{document}
