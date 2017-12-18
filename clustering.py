@@ -61,13 +61,13 @@ def ClusteringAlgorithms(dataset, dataset_name):
 
     for name, algorithm in clustering_algorithms:
         #print("{:20s}".format(name), end='')
-        print("{} && ".format(name), end='')
+        print("{} & ".format(name), end='')
         t1 = time.time()
         cluster_predict = algorithm.fit_predict(normalized_dataset)
         t2 = time.time() - t1
         k = len(set(cluster_predict))
-        print("{} && ".format(k), end='')
-        print("{:.3f} && ".format(t2), end='')
+        print("{} & ".format(k), end='')
+        print("{:.3f} & ".format(t2), end='')
         #print("| k: {:3.0f}, ".format(k),end='')
         #print("{:0.3f} seconds, ".format(t2),end='')
         if (k>1) and (name is not "Ward"):
@@ -78,8 +78,8 @@ def ClusteringAlgorithms(dataset, dataset_name):
             metric_SC = 0
         #print("CH Index: {:9.3f}, ".format(metric_CH),end='')
         #print("SC: {:.5f}".format(metric_SC))
-        print("{:.3f} && ".format(metric_CH), end='')
-        print("{:.5f} && ".format(metric_SC), end='')
+        print("{:.3f} & ".format(metric_CH), end='')
+        print("{:.5f} & ".format(metric_SC), end='')
 
         # Assignment gets turned into DataFrame
         column_name = 'cluster'
@@ -96,7 +96,7 @@ def ClusteringAlgorithms(dataset, dataset_name):
         filtered_dataset = modified_dataset[modified_dataset.groupby('cluster').cluster.transform(len) > min_size]
         new_k = len(set(filtered_dataset[column_name]))
         #print("De los {:.0f} clusters hay {:.0f} con más de {:.0f} elementos. Del total de {:.0f} elementos, se seleccionan {:.0f}".format(k,new_k,min_size,len(modified_dataset),len(filtered_dataset)))
-        print("{} && ".format(new_k), end='')
+        print("{} & ".format(new_k), end='')
         print("{} ".format(len(modified_dataset)-len(filtered_dataset)) + r"\\")
 
         # Define directory path
