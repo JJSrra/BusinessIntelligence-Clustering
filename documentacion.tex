@@ -27,32 +27,63 @@
 	\newpage
 	
 	\section{Introducción}
-	En esta práctica se tratará de interpretar el comportamiento de distintos algoritmos de clustering, trabajando sobre una base de datos de accidentes en España en el año 2013. Eligiendo distintos subconjuntos del conjunto total de datos se elaborarán 3 casos de estudio sobre los que ejecutar los algoritmos. Estos algoritmos de clustering seleccionados para el estudio son \textbf{K-Means, DBSCAN, Spectral Clustering, Birch y Ward}.
+	En esta práctica se tratará de interpretar el comportamiento de distintos algoritmos de clustering, trabajando sobre una base de datos de accidentes en España en el año 2013. Eligiendo distintos subconjuntos del conjunto total de datos se elaborarán 3 casos de estudio sobre los que ejecutar los algoritmos. Estos algoritmos de clustering seleccionados para el estudio son \textbf{K-Means, DBSCAN, Spectral Clustering, Birch y Ward}.\\
+	
+	Para cada caso de estudio se mostrarán las tablas de resultados y algunas gráficas ilustrativas y se tratará de dar la visión e interpretación más adecuada de las mismas.
 	
 	\section{Caso de estudio 1}
 	
 	\subsection{¿Qué se analiza?}
-	En el primero de estos casos de estudio se van a analizar los accidentes que han tenido lugar en autovías y autopistas. Se comprobará cuántos vehículos suelen verse involucrados en estos accidentes y cómo se distribuyen las cifras de heridos y víctimas mortales.
+	En el primero de estos casos de estudio se van a analizar los \textbf{accidentes que han tenido lugar en autovías y autopistas}. Se comprobará cuántos vehículos suelen verse involucrados en estos accidentes y cómo se distribuyen las cifras de heridos y víctimas mortales. En particular, todas las características seleccionadas para el estudio han sido el número de vehículos implicados, el número de heridos graves y leves, el número de fallecidos y el total de víctimas afectadas.\\
+	
+	Este caso de estudio en cuestión cuenta con 11943 ejemplos. Es el más vasto de los que se van a estudiar,
 	
 	\subsection{Resultados de los algoritmos}
-	A continuación se muestra una tabla que refleje los resultados de los distintos algoritmos para este primer caso de estudio. En la tabla se incluyen el número de clusters en los que el algoritmo ha segmentado los ejemplos, el tiempo de ejecución y los scores obtenidos según las métricas de Calinski-Harabaz y Silhouette.
+	En este correspondiente apartado para cada caso de estudio se mostrará una tabla que recoja algunos resultados analíticos del comportamiento de los distintos algoritmos de clustering sobre el subconjunto de datos que representa el caso de estudio. En la tabla se incluyen el número de clusters en los que el algoritmo ha segmentado los ejemplos, el tiempo de ejecución y los scores obtenidos según las métricas de Calinski-Harabaz y Silhouette (estos no son calculados para el algoritmo de clustering jerárquico del estudio, el Ward). Además, para cada caso de estudio se han realizado unos filtros a los clusters, para que aquellos que tienen menos de un determinado número pequeño de ejemplos no se consideren representativos y no formen parte de los cómputos de las matrices de dispersión y los mapas de calor. En la tabla se incluyen el número de clusters que ha quedado después del filtrado y el número de ejemplos que se encontraban dentro de los clusters eliminados.\\
+	
+	Puesto que contaremos con un número de ejemplos muy variado entre casos de estudio, el criterio que he seguido para el filtrado de los clusters ha sido el siguiente:
+	\begin{itemize}
+		\item Si el conjunto de datos tiene más de 100 ejemplos, eliminar aquellos clusters que no representen el 1\% de la población.
+		\item Si el conjunto de datos no supera los 100 ejemplos, eliminar aquellos clusters que representan 2 ejemplos o menos.
+	\end{itemize}
+
+	A continuación se muestra la tabla de resultados del primer caso de estudio.
 	
 	\begin{table}[H]
 		\centering
 		\resizebox{\textwidth}{!}{
-			$\begin{tabular}{ *{12}{c} }
+			$\begin{tabular}{ *{7}{c} }
 			\toprule
-			\textbf{Algorithm} && \textbf{Clusters} && \textbf{Execution time} && \textbf{CH Score} && \textbf{Silhouette Score}\\
+			\textbf{Algorithm} & \textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
 			\midrule
-			K-Means && 4 && 0.682 && 7362.737 && 0.76754\\
-			DBSCAN && 16 && 0.209 && 221.446 && 0.14467\\
-			Birch && 4 && 0.151 && 4425.728 && 0.70268\\
-			Spectral Clustering && 4 && 4.523 && 5655.098 && 0.72585\\
-			Ward && 100 && 0.550 && 0.000 && 0.00000\\
+			K-Means & 4 & 0.051 & 17443.397 & 0.74487 & 4 & 0 \\
+			DBSCAN & 26 & 0.888 & 322.707 & 0.31788 & 3 & 530 \\
+			Birch & 4 & 0.368 & 10526.549 & 0.67967 & 3 & 91 \\
+			Spectral Clustering & 4 & 44.247 & 13864.674 & 0.71842 & 4 & 0 \\
+			Ward & 100 & 3.131 & 0.000 & 0.00000 & 10 & 1186 \\
 			\bottomrule
 			\end{tabular}$
 		}
 		\caption{Resultados de los algoritmos de clustering para el primer caso de estudio.}
+	\end{table}
+
+	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrará en primera instancia una tabla que refleje los valores medios de cada una de las variables seleccionadas en el caso de estudio para cada uno de los clusters que han quedado tras el filtrado. En primer lugar se muestra la tabla de valores medios del algoritmo \textbf{K-Means}.
+
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{*{6}{c}}
+				\toprule
+				\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+				\midrule
+				\textbf{0} &            0.140774 &           2.958497 &     0.018508 &                  1.453730 &      3.117779 \\
+				\textbf{1} &            0.009233 &           1.143548 &     0.013410 &                  2.563860 &      1.166190 \\
+				\textbf{2} &            0.005417 &           1.444375 &     0.003333 &                  1.451667 &      1.453125 \\
+				\textbf{3} &            1.039457 &           0.146732 &     0.209618 &                  1.579531 &      1.395808 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Tabla de valores medios del algoritmo K-Means para el primer caso de estudio.}
 	\end{table}
 	
 \end{document}
