@@ -238,7 +238,7 @@
 	\end{figure}
 	
 	\subsubsection{Ward}
-	Se muestra a continuación la matriz de dispersión del algoritmo Ward para el segundo caso de estudio, ya con el filtrado de clusters aplicado.
+	Se muestra a continuación la matriz de dispersión del algoritmo Ward para el segundo caso de estudio, ya con el filtrado de clusters aplicado. A pesar de que la gráfica más importante para el algoritmo Ward se muestra un poco más adelante, ya que existe la posibilidad se muestra también esta matriz de dispersión por si se considera adecuado o interesante comparar los resultados obtenidos con la distribución de los ejemplos en función de las distintas variables.
 	
 	\begin{figure}[H]
 		\centering
@@ -270,7 +270,7 @@
 	\caption{Tabla de valores medios del algoritmo Spectral Clustering para el segundo caso de estudio.}
 	\end{table}
 	
-	Para el algoritmo Ward, al ser un algoritmo jerárquico, se ha construido un dendrograma para analizar la similitud de sus clusters resultantes y cómo se agrupan. Este dendrograma aparece junto al heatmap, y se ha calculado utilizando el método ``clustermap'' del paquete \textit{seaborn}.
+	Para el algoritmo Ward, al ser un algoritmo jerárquico, se ha construido un dendrograma para analizar la similitud de sus clusters resultantes y cómo se agrupan. Este dendrograma aparece junto al heatmap, y se ha calculado utilizando el método ``clustermap'' del paquete \textit{seaborn}. Esta será la gráfica principal en la que centraremos nuestro estudio del algoritmo, ya que seguramente es la que más interpretabilidad tiene para un algoritmo jerárquico.
 	
 	\begin{figure}[H]
 		\centering
@@ -282,6 +282,17 @@
 	En este apartado final del segundo caso de estudio se realizará una interpretación del contenido de los distintos clusters que cada algoritmo ha agrupado y se intentará dar una visión acertada de los rasgos que caracterizan a cada uno de ellos. Para ello se hará uso de las gráficas y tablas expuestas en el apartado anterior.
 	
 	\subsubsection{Spectral Clustering}
+	Spectral Clustering es el segundo algoritmo que mejor métricas de Calinski-Harabaz y Silhouette obtiene, solo por detrás de K-Means, y ambos no tienen necesidad de filtrar ningún cluster. Esto nos indica que los clusters que agrupa Spectral Clustering no tienen en general baja representación y que cada uno de ellos merece ser tenido en cuenta.\\
 	
+	Lo primero que llama la atención de este caso de estudio es que la gran mayoría de víctimas mortales se reúnen en uno de los clusters, de ahí la gran diferencia de color en el heatmap del cluster 2 en la columna de muertes con respecto al resto de clusters. También es destacable que este algoritmo para este caso de estudio es capaz de dividir los ejemplos de forma que en el cluster 2 queden aquellos accidentes mortales en los que apenas hay heridos graves ni leves (las víctimas casi en su totalidad fallecen) y sin embargo en el cluster 1 se agrupen los que tienen heridos graves pero apenas fallecidos. Es un comportamiento llamativo del caso de estudio, en el que parece que no hay punto medio a la hora de hacer el recuento de víctimas.\\
+	
+	Si observamos la matriz de dispersión se puede apreciar que sí que existen casos de muerte en cada uno de los clusters (en la representación de total de muertos contra total de heridos leves por ejemplo), sin embargo sí es cierto que para el resto de clusters la cantidad de fallecimientos es bastante inferior al de este cluster en cuestión.\\
+
+	El resto de clusters siguen una agrupación natural, y básicamente similar a la que encontrábamos en otros ejemplos anteriores, pues la distribución de los accidentes resulta ser similar; existe un cluster para aquellos accidentes graves con varios heridos graves pero pocos o ningún fallecido, y dos para accidentes con heridos leves, uno de ellos con más vehículos implicados y pocas víctimas (el caso del choque en cadena indicado anteriormente) y otro con menos vehículos y más heridos leves, y por consecuente más víctimas.\\
+	
+	La agrupación de este algoritmo es bastante buena y sigue unos criterios bastante lógicos para distinguir unos accidentes de otros. Al contar con solo 4 clusters los accidentes están suficientemente bien definidos pero no el algoritmo no tiene necesidad de entrar a valorar casos muy particulares, y se ve reflejado positivamente en las métricas y en la interpretabilidad de la matriz de dispersión y del heatmap.
+	
+	\subsubsection{Ward}
+	Como se ha indicado antes, para este algoritmo tendrá especial importancia la interpretación del dendrograma, ya que es interesante apreciar cómo se parecen unos clusters a otros para valorar cómo habría sido el resultado esperado de haber fijado menos clusters como parámetro. Para seguir este criterio sólo habría que observar el dendrograma y considerar que el siguiente paso que habría dado el algoritmo habría sido alguna de las uniones entre dos clusters o conjuntos de clusters. Por ejemplo, en este caso el siguiente paso podría haber sido la agrupación de los clusters 6 y 13, que son dos subconjuntos de accidentes donde solamente ha habido heridos graves, aunque en menor y mayor magnitud, respectivamente.
 	
 \end{document}
