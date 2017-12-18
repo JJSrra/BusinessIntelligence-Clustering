@@ -67,8 +67,16 @@
 		\caption{Resultados de los algoritmos de clustering para el primer caso de estudio.}
 	\end{table}
 
-	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrarán una matriz de dispersión y un mapa de calor (\textit{heatmap}). Los algoritmos elegidos para el análisis de este caso de estudio son \textbf{K-Means} y \textbf{Spectral Clustering}.
+	En primer lugar será necesario explicar qué representan las métricas Calinski-Harabaz y Silhouette, para poder realizar un análisis suficientemente explicativo.\\
 	
+	La métrica \textbf{Calinski-Harabaz} valora para cada algoritmo la similitud entre los ejemplos dentro de un mismo cluster y la diferenciación con el resto de clusters. Dicho de otra forma, refleja un valor real que es mejor cuanta mayor similitud haya intra-cluster y menor haya entre-cluster. A mayor valor Calinski-Harabaz, mejor separados están los ejemplos de la población para k-clusters.\\
+	
+	La métrica \textbf{Silhouette} valora en cierto modo la misma situación que el Calinski-Harabaz, pero tratando especialmente la distancia que hay entre el ejemplo más lejano del mismo cluster y el ejemplo más cercano de un cluster diferente. En este caso se obtendrá una valoración Silhouette que siempre estará en el intervalo [-1,1], y que a mayor valor indica una mejor distribución de los ejemplos entre los clusters.\\
+
+	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrarán una matriz de dispersión y un mapa de calor (\textit{heatmap}).\\
+
+	De acuerdo a lo explicado y viendo los resultados de la tabla anterior, parece que los algoritmos que mejor separan los ejemplos en clusters son el K-Means y el Spectral Clustering, y además se observa que existe una relación casi proporcional entre las dos métricas. Sin embargo como K-Means y Spectral Clustering representan los ejemplos en el mismo número de clusters y sin filtrar nada, no veo tan interesante analizar ambos, y voy a analizar \textbf{K-Means} y \textbf{Birch}, que realizando un filtrado de un cluster obtiene una valoración relativamente buena, para ver cómo es capaz de dividir los ejemplos.
+
 	\subsubsection{K-Means}
 	En primer lugar se incluye la matriz de dispersión del algortimo K-Means.
 	
@@ -105,12 +113,51 @@
 		\caption{Heatmap del algoritmo K-Means para el primer caso de estudio.}
 	\end{figure}
 
+	\subsubsection{Birch}
+	A continuación se incluye la matriz de dispersión del algoritmo Birch para este primer caso de estudio.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{plots/Birch-HighwayAccidents-ScatterMatrix.png}
+		\caption{Matriz de dispersión del algoritmo Birch para el primer caso de estudio.}
+	\end{figure}
+
+	Ahora se muestra la tabla de valores medios por variable para cada cluster dentro de este caso de estudio.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{*{6}{c}}
+				\toprule
+				\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+				\midrule
+				\textbf{0} &            1.216433 &           0.278557 &     0.124248 &                  1.166333 &      1.619238 \\
+				\textbf{1} &            0.077951 &           1.089264 &     0.012341 &                  2.545455 &      1.179556 \\
+				\textbf{2} &            0.026960 &           1.863195 &     0.007857 &                  1.456632 &      1.898013 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Tabla de valores medios del algoritmo K-Means para el primer caso de estudio.}
+	\end{table}
+
+	Y por último, también se muestra el heatmap que representa el valor medio normalizado por cada variable para cada uno de los clusters, para ayudar a visualizar la tabla anterior de forma más clara.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{heatmaps/Birch-HighwayAccidents-Heatmap.png}
+		\caption{Heatmap del algoritmo Birch para el primer caso de estudio.}
+	\end{figure}
+
 	\subsection{Interpretación de la segmentación}
 	En este apartado final se analizarán los resultados obtenidos basándonos en lo que se muestra en las gráficas y se intentará dar la visión más profesional posible de lo que se puede valorar de los datos recogidos.\\
 	
 	\subsubsection{K-Means}
-	Observando la representación de la matriz de confusión, y apoyándonos en los datos de la tabla, se puede interpretar fácilmente a qué tipo de accidente se corresponde cada cluster. El cluster 0 y el cluster 2 son muy parecidos, siendo ambos accidentes donde no hay muchas víctimas graves ni fallecidos, pero sin embargo hay una gran cantidad de heridos leves, por lo que su total de víctimas asciende considerablemente. En particular, el cluster 0 recoge mayormente aquellos accidentes en los que habiendo menos vehículos se han producido más víctimas, presumiblemente por un choque más fuerte entre dos vehículos, mientras que el cluster 2 recoge los accidentes con más implicados y algo menos de víctimas, como puede ser el caso de leves colisiones en fila de varios vehículos que solo suelen dejar pequeñas secuelas. Estos datos, aparte de con la tabla de valores medios, pueden verse claramente reflejados en el heatmap del algoritmo, con la leyenda de color señalando dónde hay más víctimas y heridos leves. Adicionalmente, en la matriz de dispersión, se puede observar muy bien lo parecidos que son ambos clusters, y sin embargo cómo se pueden diferenciar, en alguna gráfica como la que representa el total de víctimas frente al total de heridos leves.\\
+	Observando la representación de la matriz de confusión, y apoyándonos en los datos de la tabla, se puede interpretar fácilmente a qué tipo de accidente se corresponde cada cluster. El cluster 0 y el cluster 2 son muy parecidos, siendo ambos accidentes donde no hay muchas víctimas graves ni fallecidos, pero sin embargo hay una gran cantidad de heridos leves, por lo que su total de víctimas asciende considerablemente. En particular, el cluster 0 recoge mayormente aquellos accidentes en los que habiendo menos vehículos se han producido más víctimas, presumiblemente por un choque más fuerte entre dos vehículos, mientras que el cluster 2 recoge los accidentes con más implicados y algo menos de víctimas. Estos datos, aparte de con la tabla de valores medios, pueden verse claramente reflejados en el heatmap del algoritmo, con la leyenda de color señalando dónde hay más víctimas y heridos leves. Adicionalmente, en la matriz de dispersión, se puede observar muy bien lo parecidos que son ambos clusters, y sin embargo cómo se pueden diferenciar, en alguna gráfica como la que representa el total de víctimas frente al total de heridos leves.\\
 	
-	Como la contraparte a estos dos clusters, el cluster 3 es posiblemente el más devastador, ya que representa accidentes que han tenido también bastantes víctimas pero estas han resultado heridas gravemente o han fallecido. En la matriz de dispersión puede observarse, en la intersección entre la fila y la columna que representan el total de muertos, que sin embargo hay bastantes ejemplos de este cluster que no representan accidentes mortales. No obstante, en la gráfica se aprecia que la mayor parte de todos los demás accidentes que han causado algún muerto están en el cluster 3. Además, esa misma gráfica revela un dato que teníamos como objeto de nuestro estudio: \textbf{los accidentes que suceden en autovías y autopistas no suponen víctimas mortales en la mayoría de los casos.} 
+	Como la contraparte a estos dos clusters, el cluster 3 es posiblemente el más devastador, ya que representa accidentes que han tenido también bastantes víctimas pero estas han resultado heridas gravemente o han fallecido. En la matriz de dispersión puede observarse, en la intersección entre la fila y la columna que representan el total de muertos, que sin embargo hay bastantes ejemplos de este cluster que no representan accidentes mortales. No obstante, en la gráfica se aprecia que la mayor parte de todos los demás accidentes que han causado algún muerto están en el cluster 3. Además, esa misma gráfica revela un dato que teníamos como objeto de nuestro estudio: \textbf{los accidentes que suceden en autovías y autopistas no suponen víctimas mortales en la mayoría de los casos.}\\
+	
+	Por último, el cluster 1 representa los accidentes menos graves, con pocas víctimas y muchos vehículos implicados, como el clásico choque en cadena donde varios conductores pueden sufrir un latigazo cervical sin resultar en más complicaciones ni secuelas. Esto se puede observar de la mejor forma en la gráfica de la matriz de dispersión que representa el total de víctimas frente al total de vehículos implicados. Casi todos los accidentes en los que intervienen más de 2 ó 3 vehículos se reúnen entre el cluster 1 y el 3, sin embargo la gran diferencia existente entre ambos clusters reside en el número de víctimas, donde además en el cluster 3 la mayoría son graves. La representación en el heatmap de ambos clusters refuerza esta posición y la caracterización de estos clusters de dicha forma.
+	
+	\subsubsection{Birch}
 	
 \end{document}
