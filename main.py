@@ -29,7 +29,11 @@ highway_accidents_subset = highway_accidents_sample[selected]
 early_morning_accidents_subset = early_morning_accidents_sample[selected]
 wet_overturned_accidents_subset = wet_overturned_accidents_sample[selected]
 
+print(len(highway_accidents_subset))
+print(len(early_morning_accidents_subset))
+print(len(wet_overturned_accidents_subset))
+
 # Clustering Algorithms for each of the selected subsets
-#clustering.ClusteringAlgorithms(highway_accidents_subset, "Highway accidents")
-clustering.ClusteringAlgorithms(early_morning_accidents_subset, "Early morning accidents")
-#clustering.ClusteringAlgorithms(wet_overturned_accidents_subset, "Wet overturned accidents")
+clustering.ClusteringAlgorithms(highway_accidents_subset, "HighwayAccidents")
+clustering.ClusteringAlgorithms(early_morning_accidents_subset, "EarlyMorningAccidents")
+clustering.ClusteringAlgorithms(wet_overturned_accidents_subset, "WetOverturnedAccidents")
