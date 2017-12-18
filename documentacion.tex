@@ -65,6 +65,7 @@
 			\end{tabular}$
 		}
 		\caption{Resultados de los algoritmos de clustering para el primer caso de estudio.}
+		\label{tablaTodos1}
 	\end{table}
 
 	En primer lugar será necesario explicar qué representan las métricas Calinski-Harabaz y Silhouette, para poder realizar un análisis suficientemente explicativo.\\
@@ -159,5 +160,12 @@
 	Por último, el cluster 1 representa los accidentes menos graves, con pocas víctimas y muchos vehículos implicados, como el clásico choque en cadena donde varios conductores pueden sufrir un latigazo cervical sin resultar en más complicaciones ni secuelas. Esto se puede observar de la mejor forma en la gráfica de la matriz de dispersión que representa el total de víctimas frente al total de vehículos implicados. Casi todos los accidentes en los que intervienen más de 2 ó 3 vehículos se reúnen entre el cluster 1 y el 3, sin embargo la gran diferencia existente entre ambos clusters reside en el número de víctimas, donde además en el cluster 3 la mayoría son graves. La representación en el heatmap de ambos clusters refuerza esta posición y la caracterización de estos clusters de dicha forma.
 	
 	\subsubsection{Birch}
+	A diferencia de los clusters en los que se ha dividido anteriormente el algoritmo K-Means, este algoritmo ha reducido el número de clusters y representa esencialmente lo mismo en 3. El cluster 0 del algoritmo Birch es muy similar al agrupamiento que se encuentra en el cluster 3 del K-Means, el que tiene mayor cantidad de muertos y heridos graves. Tanto en la tabla de medias como en el heatmap se puede observar que este cluster es el que contiene los accidentes más graves, y con pocos vehículos implicados, por lo que entendemos que generalmente se trata de colisiones entre dos vehículos o de colisión frontolateral de algún vehículo con una mediana, y que generalmente han debido ser a gran velocidad para causar un impacto tan grande.\\
+	
+	Es destacable que algo similar ocurre con los clusters 1 y 2 de Birch; el cluster 1 de Birch es casi un calco del cluster 1 de K-Means, y el cluster 2 de Birch lo es del cluster 0 de K-Means.\\
+	
+	La mejor forma de interpretar este hecho es que Birch prácticamente ha rehecho las agrupaciones de K-Means, con unas pequeñas fluctuaciones en los valores medios de cada variable debido a los cambios de asignaciones a cluster que pueda haber en las fronteras. Como podíamos observar en la tabla de resultados de los algoritmos (tabla \ref{tablaTodos1}), Birch deja un cluster sin validez al tener menos del 1\% de los datos, y este podría ser el equivalente al cluster 2 de K-Means, que era similar al cluster 0 pero con unas varianzas mayores en términos de total de vehículos implicados y de víctimas.\\
+	
+	Los ejemplos de Birch por tanto están clasificados siguiendo el mismo esquema que en el caso anterior, pero reducidos a un total de 3 clusters. Por la mayor diversidad que ofrece K-Means al repartir mejor sus ejemplos y por sus mejores métricas tanto Calinski-Harabaz como Silhouette, creo que es el que mejor solución obtiene de los dos, y casi aún más importante, en el que más visual e interpretativo resulta su análisis.
 	
 \end{document}
