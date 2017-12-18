@@ -60,7 +60,7 @@
 			DBSCAN & 26 & 0.895 & 322.707 & 0.31788 & 3 & 530 \\			
 			Birch & 4 & 0.374 & 10526.549 & 0.67967 & 3 & 91 \\			
 			Spectral Clustering & 4 & 53.784 & 13864.674 & 0.71842 & 4 & 0 \\			
-			Ward & 100 & 3.251 & 0.000 & 0.00000 & 10 & 1186 \\
+			Ward & 100 & 3.251 & - & - & 10 & 1186 \\
 			\bottomrule
 			\end{tabular}$
 		}
@@ -179,6 +179,26 @@
 	
 	\subsection{Resultados de los algoritmos}
 	
-	A continuación se muestra la tabla de los resultados de los algoritmos para este segundo caso de estudio.
+	A continuación se muestra la tabla de los resultados de los algoritmos para este segundo caso de estudio. Como en el primer apartado, esta tabla incluirá las puntuaciones de los algoritmos según las métricas Calinski-Harabaz y Silhouette, además de los clusters en los que ha dividido los ejemplos y su tiempo de ejecución. Adicionalmente, se ha optado también por filtrar aquellos clusters que no agrupen un 1\% de los datos para que los heatmaps y tablas de medias no contengan outliers y puedan ser así más lógicos y sencillos de interpretar.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{7}{c} }
+			\toprule
+			\textbf{Algorithm} & \textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
+			\midrule
+			K-Means & 4 & 0.022 & 8773.443 & 0.78234 & 4 & 0 \\
+			DBSCAN & 22 & 0.268 & 2218.602 & 0.72603 & 8 & 255 \\
+			Birch & 4 & 0.183 & 4435.925 & 0.70089 & 3 & 1 \\
+			Spectral Clustering & 4 & 6.952 & 7897.146 & 0.74936 & 4 & 0 \\
+			Ward & 100 & 0.625 & - & - & 9 & 587 \\
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Resultados de los algoritmos de clustering para el segundo caso de estudio.}
+	\end{table}
+
+	En este caso los resultados de los scores vuelven a ser muy similares al primer caso de estudio, pero como ya hemos trabajado con K-Means, en esta ocasión lo haremos con \textbf{Spectral Clustering}. Además, para esta ocasión contaremos también con un análisis del algoritmo \textbf{Ward}, un algoritmo de clustering jerárquico aglomerativo que genera una gran cantidad de clusters (tantos como individuos haya en la población) y los va uniendo dos a dos en cada paso, para acabar obteniendo el número de clusters indicado como parámetro. Estos dos algoritmos serán el objeto de estudio para este caso.
 	
 \end{document}
