@@ -267,7 +267,7 @@
 			\bottomrule
 		\end{tabular}
 	}
-	\caption{Tabla de valores medios del algoritmo Spectral Clustering para el segundo caso de estudio.}
+	\caption{Tabla de valores medios del algoritmo Ward para el segundo caso de estudio.}
 	\end{table}
 	
 	Para el algoritmo Ward, al ser un algoritmo jerárquico, se ha construido un dendrograma para analizar la similitud de sus clusters resultantes y cómo se agrupan. Este dendrograma aparece junto al heatmap, y se ha calculado utilizando el método ``clustermap'' del paquete \textit{seaborn}. Esta será la gráfica principal en la que centraremos nuestro estudio del algoritmo, ya que seguramente es la que más interpretabilidad tiene para un algoritmo jerárquico.
@@ -302,5 +302,122 @@
 	Con esto podemos presumiblemente afirmar que el algoritmo Ward, con un valor de ``k'' adecuado, puede converger hasta obtener clusters como si fuese un algoritmo no-jerárquico. El resto de clusters sobre los que no hemos incidido también tienen distribuciones de accidentes similares a las de casos anteriores: accidentes con muertos y ninguna persona herida, accidentes con solo heridos graves, accidentes con solo heridos leves... Tener tanta variedad de clusters permite prácticamente excluir los distintos valores de las variables y relegarlas a un único cluster.\\
 	
 	Como nota curiosa, el último dato a tener en cuenta es que si observamos tanto la tabla de medias como el heatmap junto al dendrograma podemos observar que algunos clusters tienen una relación directa entre algunas de sus variables. Por ejemplo, el cluster 16 tiene el mismo valor medio de vehículos implicados como de heridos leves como de víctimas. Sabiendo que los algoritmos de clustering agrupan por similitud de los ejemplos, estoy bastante seguro de que en todos los ejemplos de este cluster tienen un accidente el mismo número de vehículos que de víctimas de carácter leve. La misma situación se puede dar para el caso del cluster 92, con el mismo número de fallecidos que de vehículos implicados. Ambos casos se pueden confirmar si observamos las gráficas correspondientes a la intersección de las columnas/filas de dichas variables en la matriz de dispersión, y se demuestra que estos clusters siguen una distribución lineal.
+
+	\section{Caso de estudio 3}
+	
+	\subsection{¿Qué se analiza?}
+	El tercer y último caso de estudio que se llevará a cabo en la práctica comprende aquellos \textbf{accidentes que han ocurrido en Andalucía, con una calzada que se registró como mojada, y donde el tipo de accidente supuso un vuelco}. Las características a analizar son las mismas de los dos casos de estudio anteriores, número de víctimas, víctimas mortales, heridos graves y leves y número de vehículos implicados. Para este caso tan particular se quiere comprobar sobre todo el comportamiento de un algoritmo jerárquico, para ver qué clusters es capaz de agrupar con un subconjunto tan específico.\\
+	
+	Como es de esperar este es el caso de estudio más reducido de todos, con un total de tan solo 78 ejemplos.
+	
+	\subsection{Resultados de los algoritmos}
+	
+	A continuación se muestra la tabla de resultados de los distintos algoritmos sobre el subconjunto de datos que representa este caso de estudio. Sobre ella se representan las métricas Calinski-Harabaz y Silhouette, el tiempo de ejecución y los clusters que el algoritmo ha agrupado, junto al número de clusters restantes tras el filtrado y el número de ejemplos que ha eliminado con el mismo.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{7}{c} }
+			\toprule
+			\textbf{Algorithm} & \textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
+			\midrule
+			K-Means & 4 & 0.022 & 530.129 & 0.83994 & 4 & 0 \\
+			DBSCAN & 5 & 0.001 & 301.505 & 0.71429 & 5 & 0 \\
+			Birch & 4 & 0.003 & 354.076 & 0.83994 & 3 & 1 \\			
+			Spectral Clustering & 4 & 0.020 & 436.408 & 0.58813 & 4 & 0 \\			
+			Ward & 39 & 0.001 & - & - & 4 & 35 \\			
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Resultados de los algoritmos de clustering para el tercer caso de estudio.}
+	\end{table}
+
+	En este problema con tan pocos datos, como se ha dicho anteriormente es interesante trabajar con un algoritmo jerárquico como \textbf{Ward} otra vez. Además, para utilizar todos los algoritmos en profundidad al menos una vez, se usará el algoritmo \textbf{DBSCAN} para complementar el análisis. El algoritmo Ward en este caso deja fuera del estudio 35 datos que considera outliers por pertenecer a clusters con un solo ejemplo.
+	
+	\subsubsection{DBSCAN}
+	
+	En primer lugar se muestra la matriz de dispersión del algoritmo DBSCAN.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{plots/DBSCAN-WetOverturnedAccidents-ScatterMatrix.png}
+		\caption{Matriz de dispersión del algoritmo DBSCAN para el tercer caso de estudio.}
+	\end{figure}
+
+	Como se puede observar la matriz de dispersión pierde una importante interpretabilidad cuando el conjunto de ejemplos es tan reducido, por lo tanto no merecerá la pena indagar más sobre ella. A pesar de ello la he decidido mostrar para que se vea de primera mano que no es representativa en casos de estudio tan específicos.\\
+	
+	Ahora se muestra la tabla de valores medios para este caso de estudio.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{*{6}{c}}
+				\toprule
+				\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+				\midrule
+				\textbf{0 } &            0.000000 &           1.019231 &          0.0 &                  1.019231 &      1.019231 \\
+				\textbf{1 } &            0.000000 &           1.000000 &          0.0 &                  2.000000 &      1.000000 \\
+				\textbf{2 } &            1.000000 &           0.000000 &          0.0 &                  1.000000 &      1.000000 \\
+				\textbf{3 } &            0.000000 &           2.000000 &          0.0 &                  1.000000 &      2.000000 \\
+				\textbf{-1} &            0.666667 &           1.000000 &          0.0 &                  2.000000 &      1.666667 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Tabla de valores medios del algoritmo DBSCAN para el tercer caso de estudio.}
+	\end{table}
+
+	Por último para el algoritmo DBSCAN se muestra su heatmap representando las distintas variables respecto a los clusters.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{heatmaps/DBSCAN-WetOverturnedAccidents-Heatmap.png}
+		\caption{Heatmap del algoritmo DBSCAN para el tercer caso de estudio.}
+	\end{figure}
+
+	\subsubsection{Ward}
+	
+	Para este caso en particular como hemos indicado antes no merece la pena utilizar la matriz de dispersión para nuestro análisis, doblemente en el caso de este algoritmo que es perfectamente interpretable mediante la tabla de valores medios y sobre todo el heatmap y el dendrograma. Por tanto, lo primero en mostrarse será la tabla de medias.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{*{6}{c}}
+				\toprule
+				\textbf{CLUSTER} &  \textbf{TOT\_HERIDOS\_GRAVES} &  \textbf{TOT\_HERIDOS\_LEVES} &  \textbf{TOT\_MUERTOS} &  \textbf{TOT\_VEHICULOS\_IMPLICADOS} &  \textbf{TOT\_VICTIMAS} \\
+				\midrule
+				\textbf{0} &                 0.0 &                1.0 &          0.0 &                       1.0 &           1.0 \\
+				\textbf{1} &                 0.0 &                2.0 &          0.0 &                       1.0 &           2.0 \\
+				\textbf{2} &                 1.0 &                0.0 &          0.0 &                       1.0 &           1.0 \\
+				\textbf{3} &                 0.0 &                1.0 &          0.0 &                       2.0 &           1.0 \\
+				\bottomrule
+			\end{tabular}
+		}
+		\caption{Tabla de valores medios del algoritmo Ward para el tercer caso de estudio.}
+	\end{table}
+	
+	De nuevo, en lugar de un heatmap aislado podemos obtener un heatmap con dendrograma para el algoritmo Ward, y es el que se muestra a continuación.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.4]{dendrograms/Ward-WetOverturnedAccidents-Dendrogram.png}
+		\caption{Dendrograma del algoritmo Ward junto a su heatmap para el tercer caso de estudio.}
+	\end{figure}
+
+	\subsection{Interpretación de la segmentación}
+	En el apartado final del algoritmo se expondrán las distinciones que se puedan hacer entre los distintos clusters de ambos algoritmos, acompañadas de una explicación apoyada en las gráficas y tablas presentadas anteriormente.
+	
+	\subsubsection{DBSCAN}
+	
+	Para el algoritmo DBSCAN nos fijaremos mucho en el heatmap, ya que nos puede aportar una distinción entre los clusters con un solo vistazo. Lo primero a destacar es que en el pequeño subconjunto que supone este caso de estudio no hay ninguna víctima mortal, por lo que todos los valores de la columna de muertes está a 0. Es algo de esperar puesto que no es tan habitual que la gente sufra lesiones tan graves al volcar el coche. Aparte de ello vemos que algunos valores también se repiten para varias variables en el mismo cluster, como el número de víctimas, de vehículos implicados y de heridos graves en el cluster 2. Esto es muy comprensible de nuevo por la dimensión del subconjunto, ya que será difícil encontrar valores muy fluctuantes, sobre todo cuando estamos tratando como en este caso con valores enteros positivos.\\
+	
+	Realmente lo que se puede decir de un algoritmo no jerárquico en un caso de estudio tan breve es muy limitado. De lo que encontramos en el heatmap también puede parecer curioso el cluster 1, donde hay dos vehículos implicados y una víctima herida leve de media. Como no parece un caso muy normal, es más que probable que haya una cantidad de ejemplos como este muy pequeña, que esté bordando el límite del filtrado realizado.\\
+	
+	A juzgar por tanto por los valores de las medias, además de utilizando la razón, se puede entender que en la mayoría de los casos cuando se produce un accidente por vuelco es solo un vehículo el que se ve implicado, el que vuelca, y suele ser una persona la que se hiere levemente, la que conduce el vehículo. Esto se corresponde con el cluster 0, y si los valores medios no son exactamente 1 quiere decir que DBSCAN ha decidido agrupar junto a esta presumible mayoría de ejemplos algún otro con dos o más vehículos implicados y el mismo número de heridos leves. De nuevo, con un algoritmo no jerárquico es difícil obtener un análisis elaborado sobre un subconjunto tan escueto.
+	
+	\subsubsection{Ward}
+	
+	En primer lugar veamos qué tipo de accidentes son los que están representados en los cuatro clusters que contienen al menos 3 ejemplos del subconjunto. De acuerdo al heatmap, se puede observar que en el cluster 2 se incluyen los accidentes con heridos graves, y que en los cluster 0, 1 y 3 se encuentran accidentes con heridos leves, cuyo número varía inversamente proporcional al número de vehículos implicados para cada cluster, es decir, el que tiene más vehículos provoca menos víctimas y viceversa.\\
+	
+	Ahora que se ha visto esto sí podremos realizar al menos una aproximación a lo que podría darse en este algoritmo si reducimos el número de clusters como parámetro. Según el dendrograma, la primera asignación que se haría sería reunir los clusters 0 y 1, que son  los más parecidos entre sí puesto que el cluster 3 ya tiene un número de vehículos implicados por encima del resto. No obstante, esta sería la siguiente agrupación según el dendrograma, con el cluster 3. De esta forma estarían reunidos todos aquellos accidentes con heridos leves, y solo quedaría separado el cluster 2 que es el que no tiene heridos leves pero sí tiene graves. Unir ambas agrupaciones finalmente resultaría en una total pérdida de información por parte del algoritmo así que no tiene sentido plantearlo.\\
 	
 \end{document}
