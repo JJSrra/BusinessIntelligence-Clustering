@@ -74,9 +74,11 @@
 	
 	La métrica \textbf{Silhouette} valora en cierto modo la misma situación que el Calinski-Harabaz, pero tratando especialmente la distancia que hay entre el ejemplo más lejano del mismo cluster y el ejemplo más cercano de un cluster diferente. En este caso se obtendrá una valoración Silhouette que siempre estará en el intervalo [-1,1], y que a mayor valor indica una mejor distribución de los ejemplos entre los clusters.\\
 
+	El algoritmo \textbf{Ward} no tendrá valoración en las métricas debido a problemas surgidos en tiempo de ejecución, por lo que su estudio será puramente analítico basándose en el resto del contenido de las tablas y las representaciones gráficas en las que merezca la pena apoyarse.
+
 	Para cada caso de estudio se centrará el análisis sobre un par de algoritmos, para no extender demasiado el contenido de la memoria. Para estos algoritmos se mostrarán una matriz de dispersión y un mapa de calor (\textit{heatmap}).\\
 
-	De acuerdo a lo explicado y viendo los resultados de la tabla anterior, parece que los algoritmos que mejor separan los ejemplos en clusters son el K-Means y el Spectral Clustering, y además se observa que existe una relación casi proporcional entre las dos métricas. Sin embargo como K-Means y Spectral Clustering representan los ejemplos en el mismo número de clusters y sin filtrar nada, no veo tan interesante analizar ambos, y voy a analizar \textbf{K-Means} y \textbf{Birch}, que realizando un filtrado de un cluster obtiene una valoración relativamente buena, para ver cómo es capaz de dividir los ejemplos.
+	De acuerdo a lo explicado y viendo los resultados de la tabla anterior, parece que los algoritmos que mejor separan los ejemplos en clusters son el K-Means y el Spectral Clustering, y además se observa que existe una relación casi proporcional entre las dos métricas. Sin embargo como K-Means y Spectral Clustering representan los ejemplos en el mismo número de clusters y sin filtrar nada, no veo tan interesante analizar ambos, y voy a analizar \textbf{K-Means} y \textbf{Birch}, que realizando un filtrado de un cluster obtiene una valoración relativamente buena, y que es un algoritmo que tradicionalmente trabaja bien con grandes cantidades de datos, así que lo voy a aplicar sobre el mayor subconjunto.
 
 	\subsubsection{K-Means}
 	En primer lugar se incluye la matriz de dispersión del algortimo K-Means.
@@ -150,7 +152,7 @@
 	\end{figure}
 
 	\subsection{Interpretación de la segmentación}
-	En este apartado final se analizarán los resultados obtenidos basándonos en lo que se muestra en las gráficas y se intentará dar la visión más profesional posible de lo que se puede valorar de los datos recogidos.\\
+	En este apartado se analizarán los resultados obtenidos basándonos en lo que se muestra en las gráficas y se intentará dar la visión más profesional posible de lo que se puede valorar de los datos recogidos.\\
 	
 	\subsubsection{K-Means}
 	Observando la representación de la matriz de confusión, y apoyándonos en los datos de la tabla, se puede interpretar fácilmente a qué tipo de accidente se corresponde cada cluster. El cluster 0 y el cluster 2 son muy parecidos, siendo ambos accidentes donde no hay muchas víctimas graves ni fallecidos, pero sin embargo hay una gran cantidad de heridos leves, por lo que su total de víctimas asciende considerablemente. En particular, el cluster 0 recoge mayormente aquellos accidentes en los que habiendo menos vehículos se han producido más víctimas, presumiblemente por un choque más fuerte entre dos vehículos, mientras que el cluster 2 recoge los accidentes con más implicados y algo menos de víctimas. Estos datos, aparte de con la tabla de valores medios, pueden verse claramente reflejados en el heatmap del algoritmo, con la leyenda de color señalando dónde hay más víctimas y heridos leves. Adicionalmente, en la matriz de dispersión, se puede observar muy bien lo parecidos que son ambos clusters, y sin embargo cómo se pueden diferenciar, en alguna gráfica como la que representa el total de víctimas frente al total de heridos leves.\\
@@ -169,6 +171,58 @@
 	La mejor forma de interpretar este hecho es que Birch prácticamente ha rehecho las agrupaciones de K-Means, con unas pequeñas fluctuaciones en los valores medios de cada variable debido a los cambios de asignaciones a cluster que pueda haber en las fronteras. Como podíamos observar en la tabla de resultados de los algoritmos (tabla \ref{tablaTodos1}), Birch deja un cluster sin validez al tener menos del 1\% de los datos, y este podría ser el equivalente al cluster 2 de K-Means, que era similar al cluster 0 pero con unas varianzas mayores en términos de total de vehículos implicados y de víctimas.\\
 	
 	Los ejemplos de Birch por tanto están clasificados siguiendo el mismo esquema que en el caso anterior, pero reducidos a un total de 3 clusters. Por la mayor diversidad que ofrece K-Means al repartir mejor sus ejemplos y por sus mejores métricas tanto Calinski-Harabaz como Silhouette, creo que es el que mejor solución obtiene de los dos, y casi aún más importante, en el que más visual e interpretativo resulta su análisis.
+	
+	\subsection{Otras configuraciones de parámetros}
+	En este apartado final se ejecutarán los algoritmos con distintas configuraciones de parámetros y se tratarán de elevar sus métricas Calinski-Harabaz y Silhouette para que ver cuáles agrupan mejor los ejemplos según estos criterios.
+	
+	\subsubsection{K-Means}
+	
+	Para el algoritmo K-Means se han aumentado el número de clusters de 1 en 1, entre 4 y 9. Los resultados son los que se muestran en la siguiente tabla.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{7}{c} }
+			\toprule
+			\textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
+			\midrule
+			4 & 0.056 & 17443.397 & 0.74487 & 4 & 0 \\
+			5 & 0.052 & 18871.057 & 0.74880 & 5 & 0 \\
+			6 & 0.052 & 20219.448 & 0.78829 & 6 & 0 \\
+			7 & 0.054 & 25698.248 & 0.81488 & 7 & 0 \\
+			8 & 0.064 & 24465.708 & 0.84153 & 8 & 0 \\
+			9 & 0.068 & 30473.332 & 0.86364 & 9 & 0 \\
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Configuración de parámetros del algoritmo K-Means en el primer caso de estudio.}
+	\end{table}
+	
+	Como puede observarse, ambas métricas crecen sustancialmente cuando se aumenta el número de clusters. Además, debido al comportamiento de K-Means todos los clusters contienen una cantidad consecuente de ejemplos como para no tener que desechar ninguno. Puesto en este contexto, de las configuraciones probadas la que mejor parece funcionar es la que agrupa los ejemplos en \textbf{9 clusters}.
+	
+	\subsubsection{Birch}
+	
+	Para el algoritmo Birch se han aumentado primero los clusters de 1 en 1 entre 4 y 6, y a continuación sobre la configuración inicial de 4 clusters se ha aumentado el umbral desde 0.1 hasta 0.3. Los resultados obtenidos aparecen en la siguiente tabla.
+	
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{7}{c} }
+			\toprule
+			\textbf{Clusters} & \textbf{Threshold} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
+			\midrule
+			4 & 0.1 & 0.385 & 10526.549 & 0.67967 & 3 & 91 \\
+			5 & 0.1 & 0.380 & 8119.076 & 0.67754 & 3 & 140 \\
+			6 & 0.1 & 0.382 & 10682.449 & 0.71477 & 4 & 140 \\
+			4 & 0.2 & 0.378 & 13125.399 & 0.70941 & 4 & 0 \\
+			4 & 0.3 & 0.376 & 2337.262 & 0.50971 & 4 & 0 \\
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Configuración de parámetros del algoritmo Birch en el primer caso de estudio.}
+	\end{table}
+	
+	De acuerdo a los experimentos planteados con este algoritmo parece que la mejor configuración, la que presenta un mayor equilibrio, sería la que cuenta con \textbf{4 clusters y un umbral de 0.2}. Además esto provoca que los ejemplos tiendan a agruparse más y no se queden perdidos por el espacio de búsqueda, por lo que se puede ver que no se desprende de ningún ejemplo cuando se da esta configuración, resultando ser sus mejores parámetros de entre los considerados.
 	
 	\section{Caso de estudio 2}
 	
@@ -303,10 +357,38 @@
 	
 	Como nota curiosa, el último dato a tener en cuenta es que si observamos tanto la tabla de medias como el heatmap junto al dendrograma podemos observar que algunos clusters tienen una relación directa entre algunas de sus variables. Por ejemplo, el cluster 16 tiene el mismo valor medio de vehículos implicados como de heridos leves como de víctimas. Sabiendo que los algoritmos de clustering agrupan por similitud de los ejemplos, estoy bastante seguro de que en todos los ejemplos de este cluster tienen un accidente el mismo número de vehículos que de víctimas de carácter leve. La misma situación se puede dar para el caso del cluster 92, con el mismo número de fallecidos que de vehículos implicados. Ambos casos se pueden confirmar si observamos las gráficas correspondientes a la intersección de las columnas/filas de dichas variables en la matriz de dispersión, y se demuestra que estos clusters siguen una distribución lineal.
 
+	\subsection{Otras configuraciones de parámetros}
+	Para este apartado solo evaluaremos distintas configuraciones de parámetros del algoritmo Spectral Clustering, ya que solo vamos a basarnos en las puntuaciones de las métricas Calinski-Harabaz y Silhouette y sobre el algoritmo Ward no se han calculado como se ha explicado anteriormente.
+
+	\subsubsection{Spectral Clustering}
+
+	Para el algoritmo Spectral Clustering se han aumentado el número de clusters de 1 en 1, entre 4 y 9, al igual que se hizo anteriormente con el algoritmo K-Means. Los resultados se muestran en la siguiente tabla.
+
+	\begin{table}[H]
+		\centering
+		\resizebox{\textwidth}{!}{
+			$\begin{tabular}{ *{7}{c} }
+			\toprule
+			\textbf{Clusters} & \textbf{Execution time} & \textbf{CH Score} & \textbf{Silhouette Score} & \textbf{Clusters after filtering} & \textbf{Number of samples dropped}\\
+			\midrule
+			4 & 6.891 & 7897.146 & 0.74936 & 4 & 0 \\
+			5 & 7.805 & 11709.279 & 0.81751 & 5 & 0 \\
+			6 & 8.110 & 11616.571 & 0.82454 & 6 & 0 \\
+			7 & 8.634 & 15002.242 & 0.85225 & 7 & 0 \\
+			8 & 8.990 & 13214.457 & 0.85611 & 7 & 43 \\
+			9 & 8.948 & 13759.211 & 0.87439 & 8 & 46 \\
+			\bottomrule
+			\end{tabular}$
+		}
+		\caption{Configuración de parámetros del algoritmo Spectral Clustering en el segundo caso de estudio.}
+	\end{table}
+
+	Con los valores de ambas métricas que se observan en la tabla y el número de ejemplos que empieza a dejar de considerar a partir de los 8 clusters, considero la mejor configuración la que cuenta con \textbf{7 clusters}, que obtiene la mejor medida en Calinski-Harabaz y casi la mejor en Silhouette.
+
 	\section{Caso de estudio 3}
 	
 	\subsection{¿Qué se analiza?}
-	El tercer y último caso de estudio que se llevará a cabo en la práctica comprende aquellos \textbf{accidentes que han ocurrido en Andalucía, con una calzada que se registró como mojada, y donde el tipo de accidente supuso un vuelco}. Las características a analizar son las mismas de los dos casos de estudio anteriores, número de víctimas, víctimas mortales, heridos graves y leves y número de vehículos implicados. Para este caso tan particular se quiere comprobar sobre todo el comportamiento de un algoritmo jerárquico, para ver qué clusters es capaz de agrupar con un subconjunto tan específico.\\
+	El tercer y último caso de estudio que se llevará a cabo en la práctica comprende aquellos \textbf{accidentes que han ocurrido en Andalucía, con una calzada que se registró como mojada, y donde el tipo de accidente supuso un vuelco}. Las características a analizar son las mismas de los dos casos de estudio anteriores, número de víctimas, víctimas mortales, heridos graves y leves y número de vehículos implicados. Para este caso tan particular se quiere comprobar sobre todo el comportamiento de un algoritmo jerárquico, para ver qué clusters es capaz de agrupar con un subconjunto tan específico. Es por eso que se ha decidido usar un caso de estudio tan característico y refinado que no representase muchos ejemplos para su correcto estudio según este criterio.\\
 	
 	Como es de esperar este es el caso de estudio más reducido de todos, con un total de tan solo 78 ejemplos.
 	
@@ -332,7 +414,9 @@
 		\caption{Resultados de los algoritmos de clustering para el tercer caso de estudio.}
 	\end{table}
 
-	En este problema con tan pocos datos, como se ha dicho anteriormente es interesante trabajar con un algoritmo jerárquico como \textbf{Ward} otra vez. Además, para utilizar todos los algoritmos en profundidad al menos una vez, se usará el algoritmo \textbf{DBSCAN} para complementar el análisis. El algoritmo Ward en este caso deja fuera del estudio 35 datos que considera outliers por pertenecer a clusters con un solo ejemplo.
+	En este problema con tan pocos datos, como se ha dicho anteriormente es interesante trabajar con un algoritmo jerárquico como \textbf{Ward} otra vez. Además, para utilizar todos los algoritmos en profundidad al menos una vez, se usará el algoritmo \textbf{DBSCAN} para complementar el análisis. El algoritmo Ward en este caso deja fuera del estudio 35 datos que considera outliers por pertenecer a clusters con un solo ejemplo.\\
+	
+	Cabe destacar que se ha introducido un comportamiento particular sobre el número de clusters que debe obtener el algoritmo Ward, y es que este es 100 siempre y cuando ese valor no esté por encima del 50\% del tamaño total del conjunto de datos. En caso de ser así, Ward pasa a hacer tantos clusters como resulten ser la mitad de ejemplos del conjunto. En este caso, ha hecho 39 clusters, la mitad de los 78 ejemplos de los que se componía el caso de estudio.
 	
 	\subsubsection{DBSCAN}
 	
@@ -419,5 +503,10 @@
 	En primer lugar veamos qué tipo de accidentes son los que están representados en los cuatro clusters que contienen al menos 3 ejemplos del subconjunto. De acuerdo al heatmap, se puede observar que en el cluster 2 se incluyen los accidentes con heridos graves, y que en los cluster 0, 1 y 3 se encuentran accidentes con heridos leves, cuyo número varía inversamente proporcional al número de vehículos implicados para cada cluster, es decir, el que tiene más vehículos provoca menos víctimas y viceversa.\\
 	
 	Ahora que se ha visto esto sí podremos realizar al menos una aproximación a lo que podría darse en este algoritmo si reducimos el número de clusters como parámetro. Según el dendrograma, la primera asignación que se haría sería reunir los clusters 0 y 1, que son  los más parecidos entre sí puesto que el cluster 3 ya tiene un número de vehículos implicados por encima del resto. No obstante, esta sería la siguiente agrupación según el dendrograma, con el cluster 3. De esta forma estarían reunidos todos aquellos accidentes con heridos leves, y solo quedaría separado el cluster 2 que es el que no tiene heridos leves pero sí tiene graves. Unir ambas agrupaciones finalmente resultaría en una total pérdida de información por parte del algoritmo así que no tiene sentido plantearlo.\\
+	
+	\subsection{Otras configuraciones de parámetros}
+	De nuevo en este apartado no se ofrecerá una configuración distinta para el algoritmo Ward, que ya de por sí es distinta a la del resto de ejecuciones de Ward para otros casos de estudio porque utiliza menos clusters.\\
+	
+	Con respecto al algoritmo DBSCAN, se ha intentado probar distintas configuraciones de parámetros pero tampoco ha sido posible a causa de errores en tiempo de ejecución, al parecer a causa de modificar el parámetro ``eps'' y aumentarlo por encima de 0.1.
 	
 \end{document}
